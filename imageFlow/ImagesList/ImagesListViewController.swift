@@ -82,7 +82,6 @@ extension ImagesListViewController: UITableViewDelegate {
             let widthImageView = tableView.contentSize.width-16-16
             let aspectRatio = image.size.height/image.size.width
             let heightCell = 4+aspectRatio*widthImageView+4
-            print(heightCell)
             return heightCell
         } else {
             print("Can not make the image for determining the heightForRow.")

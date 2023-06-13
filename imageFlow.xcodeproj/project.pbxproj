@@ -14,6 +14,7 @@
 		1100B8F22A27203E009FE88C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1100B8F12A27203E009FE88C /* Assets.xcassets */; };
 		1100B8F52A27203E009FE88C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1100B8F32A27203E009FE88C /* LaunchScreen.storyboard */; };
 		11630E922A2F59610067AEBE /* ImagesListCellClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11630E912A2F59610067AEBE /* ImagesListCellClass.swift */; };
+		11E263DA2A376F0200BC4B06 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11E263D92A376F0200BC4B06 /* ProfileViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		1100B8F62A27203E009FE88C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		11630E912A2F59610067AEBE /* ImagesListCellClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListCellClass.swift; sourceTree = "<group>"; };
 		11630E942A3264D00067AEBE /* iPhonesUITest.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = iPhonesUITest.md; sourceTree = "<group>"; };
+		11E263D92A376F0200BC4B06 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +69,7 @@
 				1100B8F12A27203E009FE88C /* Assets.xcassets */,
 				1100B8F32A27203E009FE88C /* LaunchScreen.storyboard */,
 				1100B8F62A27203E009FE88C /* Info.plist */,
+				11E263D92A376F0200BC4B06 /* ProfileViewController.swift */,
 			);
 			path = imageFlow;
 			sourceTree = "<group>";
@@ -161,6 +164,7 @@
 			files = (
 				11630E922A2F59610067AEBE /* ImagesListCellClass.swift in Sources */,
 				1100B8ED2A27203C009FE88C /* ImagesListViewController.swift in Sources */,
+				11E263DA2A376F0200BC4B06 /* ProfileViewController.swift in Sources */,
 				1100B8E92A27203C009FE88C /* AppDelegate.swift in Sources */,
 				1100B8EB2A27203C009FE88C /* SceneDelegate.swift in Sources */,
 			);

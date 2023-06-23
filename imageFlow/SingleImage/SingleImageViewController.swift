@@ -56,10 +56,10 @@ final class SingleImageViewController: UIViewController {
         let hScale = visibleRectSize.width / imageSize.width
         let vScale = visibleRectSize.height / imageSize.height
         //variant by myself
-        //let scale = max(hScale, vScale)
+        let scale = min(hScale, vScale)
         //variant by YandexPracticum
-        let theoreticalScale = max(hScale, vScale)
-        let scale = min(maxZoomScale, max(minZoomScale, theoreticalScale))
+        //let theoreticalScale = max(hScale, vScale)
+        //let scale = min(maxZoomScale, max(minZoomScale, theoreticalScale))
         scrollView.setZoomScale(scale, animated: false)
         scrollView.layoutIfNeeded()
         // offset the content so the centers of content and scrollView coincide

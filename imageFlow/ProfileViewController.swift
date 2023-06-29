@@ -10,6 +10,12 @@ import UIKit
 
 final class ProfileViewController: UIViewController {
     
+    static var exitImage = UIImage(named: "ipad.and.arrow.forward")!
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+       return .lightContent
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         addPersonalPhotoView()
@@ -19,7 +25,7 @@ final class ProfileViewController: UIViewController {
         addUserMessage()
     }
     
-    private func addPersonalPhotoView() -> UIImageView {
+    @discardableResult private func addPersonalPhotoView() -> UIImageView {
         let personalPhotoView = UIImageView(image: UIImage(named: "MockPersonalPhoto"))
         personalPhotoView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(personalPhotoView)
@@ -32,9 +38,9 @@ final class ProfileViewController: UIViewController {
         return personalPhotoView
     }
     
-    private func addExitButton() -> UIButton {
+    @discardableResult private func addExitButton() -> UIButton {
         let exitButton = UIButton.systemButton(
-            with: UIImage(named: "ipad.and.arrow.forward")!,
+            with: ProfileViewController.exitImage,
             target: self,
             action: #selector(self.didTapExitButton)
         )
@@ -52,7 +58,7 @@ final class ProfileViewController: UIViewController {
     
     @objc private func didTapExitButton() {}
     
-    private func addNameFamilyNameLabel() -> UILabel {
+    @discardableResult private func addNameFamilyNameLabel() -> UILabel {
         let nameFamilyNameLabel = UILabel()
         nameFamilyNameLabel.text = "Екатерина Новикова"
         nameFamilyNameLabel.font = UIFont.boldSystemFont(ofSize: 23)
@@ -66,7 +72,7 @@ final class ProfileViewController: UIViewController {
         return nameFamilyNameLabel
     }
     
-    private func addTaggedUserName() -> UILabel {
+    @discardableResult private func addTaggedUserName() -> UILabel {
         let taggedUserName = UILabel()
         taggedUserName.text = "@ekaterina_nov"
         taggedUserName.font = UIFont.systemFont(ofSize: 13)
@@ -80,7 +86,7 @@ final class ProfileViewController: UIViewController {
         return taggedUserName
     }
     
-    private func addUserMessage() -> UILabel {
+    @discardableResult private func addUserMessage() -> UILabel {
         let userMessage = UILabel()
         userMessage.textColor = .ypWhite
         userMessage.font = UIFont.systemFont(ofSize: 13)

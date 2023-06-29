@@ -14,13 +14,7 @@ final class SingleImageViewController: UIViewController {
     
     @IBOutlet var imageView: UIImageView!
     
-    var image: UIImage! /*{start
-            didSet {
-                guard isViewLoaded else { return }
-                imageView.image = image
-                rescaleAndCenterImageInScrollView(image: imageView.image!)
-            }
-    }*/
+    var image: UIImage!
     
     @IBAction func didTapBack(_ sender: UIButton) {
         dismiss(animated: true, completion: nil)
@@ -29,7 +23,8 @@ final class SingleImageViewController: UIViewController {
     
     
     @IBAction func didTapShare(_ sender: UIButton) {
-        let activityView =  UIActivityViewController(activityItems: [image!], applicationActivities: nil)
+        let activityView =  UIActivityViewController(activityItems: [image as Any], applicationActivities: nil)
+        // UIActivityViewController -
         present(activityView, animated: true, completion: nil)
         // `present` - Presents a view controller modally.
     }

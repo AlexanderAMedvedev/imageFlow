@@ -1,0 +1,20 @@
+    func fetch(url: URL, handler: @escaping (Result<Data, Error>) -> Void) {
+    
+            networkClient.fetch(url: mostPopularMoviesUrl) { result in
+            switch result {
+             case .failure(let error):
+                handler(.failure(error))
+                return
+             case .success(let data):
+                //construct the AllMostPopularMovies object
+                //return it using handler
+                do {
+                    //JSONDecoder() - An object that decodes instances of a data type from JSON objects.
+                    //decode - Returns a value of the type you specify, decoded from a JSON object.
+                    let allMostPopularMovies = try JSONDecoder().decode(AllMostPopularMovies.self, from: data)
+                    handler(.success(allMostPopularMovies))
+                } catch {
+                    print("Failed to parse the downloaded list of movies")
+                    handler(.failure(error))
+                }
+            }

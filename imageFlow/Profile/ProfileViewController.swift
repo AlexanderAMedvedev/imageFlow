@@ -18,12 +18,26 @@ final class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        addPersonalPhotoView()
-        addExitButton()
-        addNameFamilyNameLabel()
-        addTaggedUserName()
-        addUserMessage()
+        
+        let profileService = ProfileService.shared
+        profileService.fetchProfile(OAuth2TokenStorage().token!) { [weak self] result in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                switch result {
+                    case .success(let profile):
+                        //print("CHECK \(profile.username)")
+                        self.addPersonalPhotoView()
+                        self.addExitButton()
+                        self.addNameFamilyNameLabel(profile.name)
+                        self.addTaggedUserName(profile.loginName)
+                        self.addUserMessage(profile.bio)
+                    case .failure(let error):
+                        print("Error - \(error) - while taking profile")
+                }
+            }
+        }
     }
+        
     
     @discardableResult private func addPersonalPhotoView() -> UIImageView {
         let personalPhotoView = UIImageView(image: UIImage(named: "MockPersonalPhoto"))
@@ -58,9 +72,9 @@ final class ProfileViewController: UIViewController {
     
     @objc private func didTapExitButton() {}
     
-    @discardableResult private func addNameFamilyNameLabel() -> UILabel {
+    @discardableResult private func addNameFamilyNameLabel(_ fullName: String) -> UILabel {
         let nameFamilyNameLabel = UILabel()
-        nameFamilyNameLabel.text = "Екатерина Новикова"
+        nameFamilyNameLabel.text = fullName //"Екатерина Новикова"
         nameFamilyNameLabel.font = UIFont.boldSystemFont(ofSize: 23)
         nameFamilyNameLabel.textColor = .ypWhite
         nameFamilyNameLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -72,9 +86,9 @@ final class ProfileViewController: UIViewController {
         return nameFamilyNameLabel
     }
     
-    @discardableResult private func addTaggedUserName() -> UILabel {
+    @discardableResult private func addTaggedUserName(_ taggedUserNameString: String) -> UILabel {
         let taggedUserName = UILabel()
-        taggedUserName.text = "@ekaterina_nov"
+        taggedUserName.text = taggedUserNameString // "@ekaterina_nov"
         taggedUserName.font = UIFont.systemFont(ofSize: 13)
         taggedUserName.textColor = .ypWhite
         taggedUserName.translatesAutoresizingMaskIntoConstraints = false
@@ -86,11 +100,11 @@ final class ProfileViewController: UIViewController {
         return taggedUserName
     }
     
-    @discardableResult private func addUserMessage() -> UILabel {
+    @discardableResult private func addUserMessage(_ userBio: String) -> UILabel {
         let userMessage = UILabel()
         userMessage.textColor = .ypWhite
         userMessage.font = UIFont.systemFont(ofSize: 13)
-        userMessage.text = "Hello, world!"
+        userMessage.text = userBio //"Hello, world!"
         
         userMessage.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(userMessage)

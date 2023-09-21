@@ -12,10 +12,11 @@ final class OAuth2TokenStorage {
     enum Keys: String {
         case bearerToken
     }
-    var token: String? { get {
+    var token: String? {
+        get {
         guard let storedToken = userDefaults.string(forKey: Keys.bearerToken.rawValue) else { return nil }
         return storedToken
-     }
+        }
         set {
             userDefaults.set(newValue, forKey:  Keys.bearerToken.rawValue)
         }

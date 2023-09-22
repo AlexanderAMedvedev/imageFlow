@@ -45,13 +45,13 @@ final class ProfileService {
                 //JSONDecoder() - An object that decodes instances of a data type from JSON objects.
                 //decode - Returns a value of the type you specify, decoded from a JSON object.
                 let profileResult = try JSONDecoder().decode(ProfileResult.self, from: data)
-                let profile = Profile(username: profileResult.username,
+                self.profile = Profile(username: profileResult.username,
                                       name: "\(profileResult.firstName ?? "") \(profileResult.lastName ?? "")",
                                       loginName: "@\(profileResult.username)",
                                       bio: "\(profileResult.bio ?? "")")
-               completion(.success(profile))
+                completion(.success(self.profile!))
             } catch {
-                print("Failed to parse the downloaded list of movies")
+                print("Failed to parse the downloaded profile")
                 completion(.failure(error))
             }
         }

@@ -17,25 +17,15 @@ final class ProfileViewController: UIViewController {
     }
     
     override func viewDidLoad() {
+        let profileService = ProfileService.shared
+        
         super.viewDidLoad()
         
-        let profileService = ProfileService.shared
-        profileService.fetchProfile(OAuth2TokenStorage().token!) { [weak self] result in
-            DispatchQueue.main.async {
-                guard let self = self else { return }
-                switch result {
-                    case .success(let profile):
-                        //print("CHECK \(profile.username)")
-                        self.addPersonalPhotoView()
-                        self.addExitButton()
-                        self.addNameFamilyNameLabel(profile.name)
-                        self.addTaggedUserName(profile.loginName)
-                        self.addUserMessage(profile.bio)
-                    case .failure(let error):
-                        print("Error - \(error) - while taking profile")
-                }
-            }
-        }
+        addPersonalPhotoView()
+        addExitButton()
+        addNameFamilyNameLabel(profileService.profile!.name)
+        addTaggedUserName(profileService.profile!.loginName)
+        addUserMessage(profileService.profile!.bio)
     }
         
     

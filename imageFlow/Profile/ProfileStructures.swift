@@ -27,3 +27,11 @@ struct Profile {
     var loginName: String
     var bio: String
 }
+
+struct UserResult: Codable {
+    var profileImageURLs: [String: String]
+    
+    enum CodingKeys: String, CodingKey {
+        case profileImageURLs = "profile_image"
+    }
+}

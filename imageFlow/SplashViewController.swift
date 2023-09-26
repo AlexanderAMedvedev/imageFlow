@@ -8,12 +8,12 @@ final class SplashViewController: UIViewController {
     private let oauth2TokenStorage = OAuth2TokenStorage()
     private let profileService = ProfileService.shared
     
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
         if let token = oauth2TokenStorage.token {
-            fetchProfile(token)
-            switchToTabBarController()
+                fetchProfile(token)
+                switchToTabBarController()
         } else {
             // Show Auth Screen
             performSegue(withIdentifier: ShowAuthenticationScreenSegueIdentifier, sender: nil)
@@ -23,6 +23,7 @@ final class SplashViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setNeedsStatusBarAppearanceUpdate()
+        
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -74,7 +75,10 @@ extension SplashViewController: AuthViewControllerDelegate {
             guard let self = self else { return }
             switch result {
                 case .success(let token):
+                    let group = DispatchGroup()
+                    group.enter()
                     self.fetchProfile(token)
+                        group.leave()
                     self.switchToTabBarController()
                     UIBlockingProgressHUD.dismiss()
                 case .failure:

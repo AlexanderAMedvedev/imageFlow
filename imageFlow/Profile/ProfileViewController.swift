@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     
@@ -15,22 +16,45 @@ final class ProfileViewController: UIViewController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
        return .lightContent
     }
+    private var profileImageServiceObserver: NSObjectProtocol?
     
     override func viewDidLoad() {
-        let profileService = ProfileService.shared
-        
         super.viewDidLoad()
         
-        addPersonalPhotoView()
+        let profileService = ProfileService.shared
         addExitButton()
         addNameFamilyNameLabel(profileService.profile!.name)
         addTaggedUserName(profileService.profile!.loginName)
         addUserMessage(profileService.profile!.bio)
+        //addPersonalPhotoView()
+        
+        profileImageServiceObserver = NotificationCenter.default.addObserver(
+                        forName: ProfileImageService.DidChangeNotification, // 3
+                        object: nil,                                        // 4
+                        queue: .main                                        // 5
+                    ) { [weak self] _ in
+                        guard let self = self else { return }
+                        self.updateAvatar()                                 // 6
+                    }
+        updateAvatar()
     }
         
-    
-    @discardableResult private func addPersonalPhotoView() -> UIImageView {
-        let personalPhotoView = UIImageView(image: UIImage(named: "MockPersonalPhoto"))
+    private func updateAvatar() {                                   // 8
+            guard
+                let profileImageURL = ProfileImageService.shared.profileSmallImageURL,
+                let url = URL(string: profileImageURL)
+            else { return }
+            // TODO [Sprint 11] Обновить аватар, используя Kingfisher
+        addPersonalPhotoView(url)
+        }
+    @discardableResult private func addPersonalPhotoView(_ url: URL) -> UIImageView {
+        let personalPhotoView = UIImageView(image: UIImage())
+        personalPhotoView.kf.indicatorType = .activity
+        personalPhotoView.kf.setImage(with: url)
+        
+        let processor = RoundCornerImageProcessor(cornerRadius: 20)
+        personalPhotoView.kf.setImage(with: url, options: [.processor(processor)])
+        
         personalPhotoView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(personalPhotoView)
         NSLayoutConstraint.activate([

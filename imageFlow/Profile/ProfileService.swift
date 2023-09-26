@@ -21,7 +21,6 @@ final class ProfileService {
         
         request.httpMethod = "GET"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        
         task = URLSession.shared.dataTask(with: request) { data, response, error in
             // Проверяем, пришла ли ошибка
             if let error = error {
@@ -46,15 +45,17 @@ final class ProfileService {
                 //decode - Returns a value of the type you specify, decoded from a JSON object.
                 let profileResult = try JSONDecoder().decode(ProfileResult.self, from: data)
                 self.profile = Profile(username: profileResult.username,
-                                      name: "\(profileResult.firstName ?? "") \(profileResult.lastName ?? "")",
-                                      loginName: "@\(profileResult.username)",
-                                      bio: "\(profileResult.bio ?? "")")
+                                       name: "\(profileResult.firstName ?? "") \(profileResult.lastName ?? "")",
+                                       loginName: "@\(profileResult.username)",
+                                       bio: "\(profileResult.bio ?? "")")
+                print("PROFILE \(self.profile)")
+                ProfileImageService.shared.fetchProfileImageURL(self.profile!.username, token) { _ in }
                 completion(.success(self.profile!))
             } catch {
                 print("Failed to parse the downloaded profile")
                 completion(.failure(error))
             }
         }
-        task!.resume()
+            task!.resume()
     }
 }

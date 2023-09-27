@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ssf-tQ-6rz">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -13,7 +13,7 @@
         <!--Auth View Controller-->
         <scene sceneID="0YS-UX-LeR">
             <objects>
-                <viewController id="hs4-SN-fp5" customClass="AuthViewController" customModule="imageFlow" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AuthViewControllerID" id="hs4-SN-fp5" customClass="AuthViewController" customModule="imageFlow" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="DdO-jV-rTe">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -305,7 +305,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="sOy-RO-73V" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="uZx-Y0-lQV">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="44"/>
+                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -317,40 +317,12 @@
             </objects>
             <point key="canvasLocation" x="-4839" y="-130"/>
         </scene>
-        <!--Splash View Controller-->
-        <scene sceneID="f2J-Vy-7YH">
-            <objects>
-                <viewController id="ssf-tQ-6rz" customClass="SplashViewController" customModule="imageFlow" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="yN5-TV-tmi">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="logoLaunchScreen" translatesAutoresizingMaskIntoConstraints="NO" id="R6a-IL-NLe">
-                                <rect key="frame" x="159" y="399.66666666666669" width="75" height="78"/>
-                            </imageView>
-                        </subviews>
-                        <viewLayoutGuide key="safeArea" id="f6Q-Qj-SZw"/>
-                        <color key="backgroundColor" name="YP Black"/>
-                        <constraints>
-                            <constraint firstItem="R6a-IL-NLe" firstAttribute="centerX" secondItem="f6Q-Qj-SZw" secondAttribute="centerX" id="0K8-G7-HQU"/>
-                            <constraint firstItem="R6a-IL-NLe" firstAttribute="centerY" secondItem="f6Q-Qj-SZw" secondAttribute="centerY" id="pLP-lS-D6p"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <segue destination="sOy-RO-73V" kind="presentation" identifier="ShowAuthenticationScreen" modalPresentationStyle="fullScreen" id="XKV-3Z-8TL"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ilS-ir-5zu" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-5842" y="220"/>
-        </scene>
     </scenes>
     <color key="tintColor" name="YP Black"/>
     <resources>
         <image name="0" width="200" height="132"/>
         <image name="Backward" width="24" height="24"/>
         <image name="Share" width="50" height="50"/>
-        <image name="logoLaunchScreen" width="75" height="78"/>
         <image name="nav_back_button" width="24" height="24"/>
         <image name="noLike" width="30" height="28"/>
         <image name="tab_editorial_active" width="30" height="30"/>

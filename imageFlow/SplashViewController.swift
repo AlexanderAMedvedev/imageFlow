@@ -2,13 +2,19 @@ import UIKit
 import ProgressHUD
 
 final class SplashViewController: UIViewController {
-    private let ShowAuthenticationScreenSegueIdentifier = "ShowAuthenticationScreen"
+   /* private let ShowAuthenticationScreenSegueIdentifier = "ShowAuthenticationScreen" */
 
     private let oauth2Service = OAuth2Service()
     private let oauth2TokenStorage = OAuth2TokenStorage()
     private let profileService = ProfileService.shared
     
+    private var alertView: AlertPresenterProtocol?
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        addLogoView()
+    }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if let token = oauth2TokenStorage.token {
@@ -16,7 +22,13 @@ final class SplashViewController: UIViewController {
                 switchToTabBarController()
         } else {
             // Show Auth Screen
-            performSegue(withIdentifier: ShowAuthenticationScreenSegueIdentifier, sender: nil)
+            /* performSegue(withIdentifier: ShowAuthenticationScreenSegueIdentifier, sender: nil) */
+            
+            let storyboard = UIStoryboard(name: "Main", bundle: .main)
+            let viewController = storyboard.instantiateViewController(withIdentifier: "AuthViewControllerID") as! AuthViewController
+            viewController.delegate = self
+           // viewController.modalPresentation = .fullScreen
+            present(viewController, animated: true, completion: nil)
         }
     }
 
@@ -45,9 +57,20 @@ final class SplashViewController: UIViewController {
         window.rootViewController = tabBarController
         // rootViewController - The root view controller for the window.
     }
+    private func addLogoView() {
+        let logoView = UIImageView(image: UIImage(named: "logoLaunchScreen"))
+        logoView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(logoView)
+        NSLayoutConstraint.activate([
+            logoView.heightAnchor.constraint(equalToConstant: 77.68),
+            logoView.widthAnchor.constraint(equalToConstant: 75),
+            logoView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            logoView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+    }
 }
 
-extension SplashViewController {
+/* extension SplashViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == ShowAuthenticationScreenSegueIdentifier {
             guard
@@ -59,7 +82,7 @@ extension SplashViewController {
             super.prepare(for: segue, sender: sender)
         }
     }
-}
+} */
 
 extension SplashViewController: AuthViewControllerDelegate {
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
@@ -75,15 +98,15 @@ extension SplashViewController: AuthViewControllerDelegate {
             guard let self = self else { return }
             switch result {
                 case .success(let token):
-                    let group = DispatchGroup()
-                    group.enter()
                     self.fetchProfile(token)
-                        group.leave()
                     self.switchToTabBarController()
                     UIBlockingProgressHUD.dismiss()
+                    
                 case .failure:
-                    // TODO [Sprint 11]
                     UIBlockingProgressHUD.dismiss()
+                    alertView = AlertPresenter(delegate: self, alertSome: createAlertModel())
+                    alertView?.show()
+                    
                     break
                     // break - When used inside a switch statement, break causes the switch statement to end its execution immediately and to transfer control to the code after the switch statement’s closing brace
             }
@@ -99,9 +122,27 @@ extension SplashViewController: AuthViewControllerDelegate {
                     self.switchToTabBarController()
                 case .failure:
                     UIBlockingProgressHUD.dismiss()
-                    // TODO [Sprint 11] Показать ошибку
+                    
+                    alertView = AlertPresenter(delegate: self, alertSome: createAlertModel())
+                    alertView?.show()
+                    
                     break
             }
         }
+    }
+}
+
+extension SplashViewController: AlertPresenterDelegate {
+    func showAlert(alert: UIAlertController, completion: (() -> Void)?) {
+        present(alert, animated: true, completion: completion)
+    }
+    func createAlertModel() -> AlertViewModel {
+        var alertModel = AlertViewModel(
+            title: "Что-то пошло не так(",
+            message: "Не удалось войти в систему",
+            buttonText: "Ок"
+        )
+        alertModel.handler = { _ in }
+        return alertModel
     }
 }

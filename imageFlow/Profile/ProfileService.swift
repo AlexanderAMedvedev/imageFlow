@@ -24,7 +24,7 @@ final class ProfileService {
         task = URLSession.shared.dataTask(with: request) { data, response, error in
             // Проверяем, пришла ли ошибка
             if let error = error {
-                completion(Result.failure(error))
+                completion(.failure(error))
                 return
             }
             

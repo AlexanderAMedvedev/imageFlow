@@ -14,6 +14,7 @@ protocol AlertPresenterProtocol {
 
 protocol AlertPresenterDelegate: AnyObject {
     func showAlert(alert: UIAlertController, completion: (() -> Void)?)
+    func createAlertModel() -> AlertViewModel
 }
 
 struct AlertViewModel {

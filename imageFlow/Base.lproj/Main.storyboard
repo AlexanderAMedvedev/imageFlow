@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="unsplash_logo" translatesAutoresizingMaskIntoConstraints="NO" id="GaT-P0-z4o">
-                                <rect key="frame" x="157.66666666666666" y="396" width="60" height="60"/>
+                                <rect key="frame" x="166.66666666666666" y="396" width="60" height="60"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="60" id="LxS-1Q-ork"/>
                                     <constraint firstAttribute="height" constant="60" id="kt2-Jh-ryN"/>
@@ -30,7 +30,6 @@
                                 <color key="backgroundColor" name="YP White"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="5di-wn-lYo"/>
-                                    <constraint firstAttribute="width" constant="343" id="kF8-HR-yEa"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -51,9 +50,8 @@
                         <viewLayoutGuide key="safeArea" id="lFP-Kl-tJK"/>
                         <color key="backgroundColor" name="YP Black"/>
                         <constraints>
-                            <constraint firstItem="5EV-ch-bKd" firstAttribute="leading" secondItem="lFP-Kl-tJK" secondAttribute="leading" constant="16" id="7d4-5I-sAn"/>
+                            <constraint firstItem="5EV-ch-bKd" firstAttribute="leading" secondItem="DdO-jV-rTe" secondAttribute="leading" constant="24" id="7d4-5I-sAn"/>
                             <constraint firstItem="lFP-Kl-tJK" firstAttribute="bottom" secondItem="5EV-ch-bKd" secondAttribute="bottom" constant="124" id="8bl-ft-Dnl"/>
-                            <constraint firstItem="GaT-P0-z4o" firstAttribute="centerX" secondItem="5EV-ch-bKd" secondAttribute="centerX" id="Fmq-Bx-Ksy"/>
                             <constraint firstItem="GaT-P0-z4o" firstAttribute="centerX" secondItem="DdO-jV-rTe" secondAttribute="centerX" id="PAW-yc-oAQ"/>
                             <constraint firstItem="GaT-P0-z4o" firstAttribute="centerY" secondItem="DdO-jV-rTe" secondAttribute="centerY" id="cjw-8F-cwd"/>
                             <constraint firstAttribute="trailing" secondItem="5EV-ch-bKd" secondAttribute="trailing" constant="16" id="nVn-7q-Qdy"/>

@@ -25,8 +25,8 @@ final class OAuth2Service {
     private var lastCode: String?
     
     func fetchOAuthToken(
-            _ code: String,
-    completion: @escaping (Result<String, Error>) -> Void ){
+                        _ code: String,
+                        completion: @escaping (Result<String, Error>) -> Void ){
         assert(Thread.isMainThread)
         //Thread: A thread of execution.
         //assert(утверждать): Performs a traditional C-style assert with an optional message.

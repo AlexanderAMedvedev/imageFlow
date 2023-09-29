@@ -103,11 +103,11 @@
 				1100B8E82A27203C009FE88C /* AppDelegate.swift */,
 				1100B8EA2A27203C009FE88C /* SceneDelegate.swift */,
 				11630E902A2F59050067AEBE /* ImagesList */,
-				1100B8EE2A27203C009FE88C /* Main.storyboard */,
 				11C5D82B2AC066AA00E4DE59 /* TabBarController.swift */,
 				11C7A7012A8BC9EA0032FB7F /* SplashViewController.swift */,
 				11C5D82D2AC4410900E4DE59 /* AlertPresenterFullPackage.swift */,
 				11C7A6F42A83915D0032FB7F /* Constants.swift */,
+				1100B8EE2A27203C009FE88C /* Main.storyboard */,
 				1100B8F32A27203E009FE88C /* LaunchScreen.storyboard */,
 				1100B8F12A27203E009FE88C /* Assets.xcassets */,
 				117926432A44F53A00551990 /* Colors */,
@@ -434,7 +434,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.AlexanderAMedvedev.imageFlow10;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.AlexanderAMedvedev.imageFlow53;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -465,7 +465,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ru.AlexanderAMedvedev.imageFlow10;
+				PRODUCT_BUNDLE_IDENTIFIER = ru.AlexanderAMedvedev.imageFlow14;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;

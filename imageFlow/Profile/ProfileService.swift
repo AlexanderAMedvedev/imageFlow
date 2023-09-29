@@ -24,7 +24,7 @@ final class ProfileService {
         task = URLSession.shared.dataTask(with: request) { data, response, error in
             // Проверяем, пришла ли ошибка
             if let error = error {
-                completion(.failure(error))
+                    completion(.failure(error))
                 return
             }
             
@@ -33,7 +33,8 @@ final class ProfileService {
             if let response = response as? HTTPURLResponse,
                response.statusCode < 200 || response.statusCode >= 300 {
                 //statusCode - The response’s HTTP status code.
-                completion(.failure(NetworkError.codeError))
+                
+                    completion(.failure(NetworkError.codeError))
                 return
             }
             
@@ -50,10 +51,12 @@ final class ProfileService {
                                        bio: "\(profileResult.bio ?? "")")
                 print("PROFILE \(self.profile)")
                 ProfileImageService.shared.fetchProfileImageURL(self.profile!.username, token) { _ in }
-                completion(.success(self.profile!))
+                
+                    completion(.success(self.profile!))
             } catch {
                 print("Failed to parse the downloaded profile")
-                completion(.failure(error))
+                
+                    completion(.failure(error)) 
             }
         }
             task!.resume()

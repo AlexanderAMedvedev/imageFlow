@@ -9,7 +9,6 @@ import UIKit
 
 final class ImagesListViewController: UIViewController {
 //Q: 1) `tableView.register(ImagesListCell.self,...`
-//   2) tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
     
     @IBOutlet private var tableView: UITableView!
     
@@ -111,5 +110,4 @@ extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: ShowSingleImageSegueIdentifier, sender: indexPath)
     }
-    
 }

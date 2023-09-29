@@ -20,23 +20,32 @@ final class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+         
         let profileService = ProfileService.shared
-        addExitButton()
-        addNameFamilyNameLabel(profileService.profile!.name)
-        addTaggedUserName(profileService.profile!.loginName)
-        addUserMessage(profileService.profile!.bio)
-        //addPersonalPhotoView()
-        
-        profileImageServiceObserver = NotificationCenter.default.addObserver(
-                        forName: ProfileImageService.DidChangeNotification, // 3
-                        object: nil,                                        // 4
-                        queue: .main                                        // 5
-                    ) { [weak self] _ in
-                        guard let self = self else { return }
-                        self.updateAvatar()                                 // 6
-                    }
-        updateAvatar()
+        if profileService.profile == nil { 
+            // start alert
+               var alert = UIAlertController(title: "Что-то пошло не так(", message: "Не удалось войти в систему", preferredStyle: .alert)
+               let action = UIAlertAction(title: "Ок", style: .default)
+               alert.addAction(action)
+               present(alert, animated: true)
+           // end alert */
+        } else {
+            addExitButton()
+            addNameFamilyNameLabel(profileService.profile!.name)
+            addTaggedUserName(profileService.profile!.loginName)
+            addUserMessage(profileService.profile!.bio)
+            //addPersonalPhotoView()
+            
+            profileImageServiceObserver = NotificationCenter.default.addObserver(
+                forName: ProfileImageService.DidChangeNotification, // 3
+                object: nil,                                        // 4
+                queue: .main                                        // 5
+            ) { [weak self] _ in
+                guard let self = self else { return }
+                self.updateAvatar()                                 // 6
+            }
+            updateAvatar()
+        }
     }
         
     private func updateAvatar() {                                   // 8

@@ -11,7 +11,6 @@ import WebKit
 
 fileprivate let UnsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
 
-
 final class WebViewViewController: UIViewController {
     
     @IBOutlet private var progressView: UIProgressView!

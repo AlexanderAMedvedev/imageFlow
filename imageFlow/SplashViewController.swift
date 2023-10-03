@@ -10,6 +10,8 @@ final class SplashViewController: UIViewController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
     }
+    
+    private var count: Int = 1 // counts the quantity of entrance of func 'viewDidAppear'
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,17 +21,21 @@ final class SplashViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        if let token = oauth2TokenStorage.token {
-            fetchProfile(token)
-            switchToTabBarController()
-        } else {
-            // Show Auth Screen
-            let storyboard = UIStoryboard(name: "Main", bundle: .main)
-            let viewController = storyboard.instantiateViewController(withIdentifier: "AuthViewControllerID") as! AuthViewController
-            viewController.delegate = self
-            viewController.modalPresentationStyle = .fullScreen
-            present(viewController, animated: true, completion: nil)
+        if count == 1 {
+            if let token = oauth2TokenStorage.token {
+                fetchProfile(token)
+                count = 2
+                //switchToTabBarController()
+            } else {
+                // Show Auth Screen
+                let storyboard = UIStoryboard(name: "Main", bundle: .main)
+                let viewController = storyboard.instantiateViewController(withIdentifier: "AuthViewControllerID") as! AuthViewController
+                viewController.delegate = self
+                viewController.modalPresentationStyle = .fullScreen
+                present(viewController, animated: true, completion: nil)
+                
+                count = 2
+            }
         }
     }
 
@@ -53,6 +59,7 @@ final class SplashViewController: UIViewController {
         window.rootViewController = tabBarController
         // rootViewController - The root view controller for the window.
     }
+    
     private func addLogoView() {
         let logoView = UIImageView(image: UIImage(named: "logoLaunchScreen"))
         logoView.translatesAutoresizingMaskIntoConstraints = false
@@ -67,32 +74,30 @@ final class SplashViewController: UIViewController {
 }
 
 extension SplashViewController: AuthViewControllerDelegate {
+    
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
         UIBlockingProgressHUD.show()
-        dismiss(animated: true) { [weak self] in
-            guard let self = self else { return }
-            self.fetchOAuthToken(code)
-        }
+        dismiss(animated: false)
+        fetchOAuthToken(code)
     }
     
     private func fetchOAuthToken(_ code: String) {
         oauth2Service.fetchOAuthToken(code) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-                case .success(let token):
-                    self.fetchProfile(token)
-                    self.switchToTabBarController()
-                    UIBlockingProgressHUD.dismiss()
-                case .failure:
-                    UIBlockingProgressHUD.dismiss()
-                    break
-                    // break - When used inside a switch statement, break causes the switch statement to end its execution immediately and to transfer control to the code after the switch statement’s closing brace
+            DispatchQueue.main.async  {
+                guard let self = self else { return }
+                switch result {
+                    case .success(let token):
+                        self.fetchProfile(token)
+                    case .failure:
+                        UIBlockingProgressHUD.dismiss()
+                }
             }
         }
     }
     
     private func fetchProfile(_ token: String) {
-        profileService.fetchProfile(token) { [weak self] result in
+        profileService.fetchProfile(token+"token") { [weak self] result in
+            DispatchQueue.main.async  {
                 guard let self = self else { return }
                 switch result {
                     case .success:
@@ -100,9 +105,13 @@ extension SplashViewController: AuthViewControllerDelegate {
                         self.switchToTabBarController()
                     case .failure:
                         UIBlockingProgressHUD.dismiss()
-                        break
+                        var alert = UIAlertController(title: "Что-то пошло не так(", message: "Не удалось войти в систему", preferredStyle: .alert)
+                        let action = UIAlertAction(title: "Ок", style: .default)
+                        alert.addAction(action)
+                        self.present(alert, animated: true)
                 }
-            
+            }
         }
     }
+ 
 }

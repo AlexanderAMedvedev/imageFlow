@@ -56,9 +56,9 @@ final class OAuth2Service {
                             //  struct OAuthTokenResponseBody: Decodable {
                             //     let accessToken: String
                     self.authToken = authToken
-                    completion(.success(authToken))
+                        DispatchQueue.main.async { completion(.success(authToken)) }
                 case .failure(let error):
-                    completion(.failure(error))
+                        DispatchQueue.main.async { completion(.failure(error)) }
     } }
             task.resume()
         }
@@ -74,7 +74,7 @@ final class OAuth2Service {
                 let response = result.flatMap { data -> Result<OAuthTokenResponseBody, Error> in
                     Result { try decoder.decode(OAuthTokenResponseBody.self, from: data) }
     }
-                completion(response)
+                DispatchQueue.main.async { completion(response) }
             }
     }
         private func authTokenRequest(code: String) -> URLRequest {

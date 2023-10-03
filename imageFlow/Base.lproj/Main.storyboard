@@ -71,8 +71,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6cE-3j-GV5">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                            <wkWebView contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6cE-3j-GV5">
+                                <rect key="frame" x="0.0" y="116" width="393" height="703"/>
                                 <color key="backgroundColor" name="YP White"/>
                                 <wkWebViewConfiguration key="configuration">
                                     <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
@@ -80,7 +80,7 @@
                                 </wkWebViewConfiguration>
                             </wkWebView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hqg-0h-OCI">
-                                <rect key="frame" x="0.0" y="0.0" width="130" height="42"/>
+                                <rect key="frame" x="0.0" y="50" width="130" height="42"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="42" id="2ty-aM-nCj"/>
                                     <constraint firstAttribute="width" constant="130" id="Dw6-1t-D8E"/>
@@ -92,22 +92,22 @@
                                 </connections>
                             </button>
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cW3-CG-hh9">
-                                <rect key="frame" x="0.0" y="42" width="393" height="4"/>
+                                <rect key="frame" x="0.0" y="92" width="393" height="4"/>
                                 <color key="progressTintColor" name="YP Black"/>
                             </progressView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="YNE-bv-fq0"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="YNE-bv-fq0" firstAttribute="trailing" secondItem="cW3-CG-hh9" secondAttribute="trailing" id="1kP-j1-ahY"/>
-                            <constraint firstItem="hqg-0h-OCI" firstAttribute="leading" secondItem="YNE-bv-fq0" secondAttribute="leading" id="Bku-GU-OEL"/>
-                            <constraint firstItem="YNE-bv-fq0" firstAttribute="trailing" secondItem="6cE-3j-GV5" secondAttribute="trailing" id="Dle-2b-GsE"/>
-                            <constraint firstItem="6cE-3j-GV5" firstAttribute="leading" secondItem="YNE-bv-fq0" secondAttribute="leading" id="K48-Lk-vBw"/>
-                            <constraint firstItem="YNE-bv-fq0" firstAttribute="bottom" secondItem="6cE-3j-GV5" secondAttribute="bottom" id="Kn0-Q3-JGl"/>
+                            <constraint firstItem="cW3-CG-hh9" firstAttribute="leading" secondItem="hqg-0h-OCI" secondAttribute="leading" id="3Mf-2J-mhJ"/>
+                            <constraint firstItem="cW3-CG-hh9" firstAttribute="leading" secondItem="6cE-3j-GV5" secondAttribute="leading" id="5Bs-4N-ryk"/>
+                            <constraint firstItem="YNE-bv-fq0" firstAttribute="trailing" secondItem="6cE-3j-GV5" secondAttribute="trailing" id="9zc-18-hEn"/>
+                            <constraint firstAttribute="bottom" secondItem="6cE-3j-GV5" secondAttribute="bottom" constant="52" id="C6t-kg-5qP"/>
                             <constraint firstItem="cW3-CG-hh9" firstAttribute="top" secondItem="hqg-0h-OCI" secondAttribute="bottom" id="Mr9-zR-3Vc"/>
-                            <constraint firstItem="hqg-0h-OCI" firstAttribute="top" secondItem="YNE-bv-fq0" secondAttribute="top" id="btz-iX-a9S"/>
-                            <constraint firstItem="cW3-CG-hh9" firstAttribute="leading" secondItem="YNE-bv-fq0" secondAttribute="leading" id="nfE-N9-wDI"/>
-                            <constraint firstItem="6cE-3j-GV5" firstAttribute="top" secondItem="YNE-bv-fq0" secondAttribute="top" id="wql-Ch-rtb"/>
+                            <constraint firstItem="hqg-0h-OCI" firstAttribute="top" secondItem="ymQ-d6-gRS" secondAttribute="top" constant="50" id="ado-0Z-cAa"/>
+                            <constraint firstItem="6cE-3j-GV5" firstAttribute="leading" secondItem="YNE-bv-fq0" secondAttribute="leading" id="ckk-dh-euY"/>
+                            <constraint firstItem="cW3-CG-hh9" firstAttribute="trailing" secondItem="6cE-3j-GV5" secondAttribute="trailing" id="hJC-gl-lYu"/>
+                            <constraint firstItem="6cE-3j-GV5" firstAttribute="top" secondItem="ymQ-d6-gRS" secondAttribute="top" constant="60" id="vDS-z0-XhY"/>
                         </constraints>
                     </view>
                     <connections>

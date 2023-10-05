@@ -45,7 +45,7 @@ final class ProfileService {
                                                                   name: "\(profileResult.firstName ?? "") \(profileResult.lastName ?? "")",
                                                                   loginName: "@\(profileResult.username)",
                                                                   bio: "\(profileResult.bio ?? "")")
-                    print("PROFILE \(self.profile)")
+                    print("HINT profile data \(self.profile)")
                 }
                 DispatchQueue.main.async { ProfileImageService.shared.fetchProfileImageURL(self.profile!.username, token) { _ in } }
                 

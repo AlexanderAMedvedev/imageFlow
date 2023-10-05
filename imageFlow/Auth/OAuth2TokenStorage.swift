@@ -6,18 +6,31 @@
 //
 
 import Foundation
+import SwiftKeychainWrapper
 
 final class OAuth2TokenStorage {
-    private let userDefaults = UserDefaults.standard
-    enum Keys: String {
-        case bearerToken
-    }
-    var token: String? { get {
-        guard let storedToken = userDefaults.string(forKey: Keys.bearerToken.rawValue) else { return nil }
-        return storedToken
-     }
+  //private let userDefaults = UserDefaults.standard
+  //  enum Keys: String {
+  //      case bearerToken
+  //  }
+    var token: String? {
+        get {
+            let storedToken: String? = KeychainWrapper.standard.string(forKey: "Auth token")
+            return storedToken
+        //guard let storedToken = userDefaults.string(forKey: Keys.bearerToken.rawValue) else { return nil }
+        //return storedToken
+        }
         set {
-            userDefaults.set(newValue, forKey:  Keys.bearerToken.rawValue)
+            guard let authToken = newValue else {
+                print("Did not open optional with the token")
+                return
+            }
+            let isSuccess = KeychainWrapper.standard.set(authToken, forKey: "Auth token")
+            guard isSuccess else {
+                print("Did not write the token into keychain")
+                return
+            }
+          //  userDefaults.set(newValue, forKey:  Keys.bearerToken.rawValue)
         }
     }
 }

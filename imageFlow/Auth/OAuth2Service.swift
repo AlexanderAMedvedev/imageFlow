@@ -9,27 +9,56 @@ import Foundation
 
 final class OAuth2Service {
     static let shared = OAuth2Service()
-        private let urlSession = URLSession.shared
-        private (set) var authToken: String? {
-            get {
+    // Ожидаю ответ
+    private let urlSession = URLSession.shared
+    // URLSession: An object that coordinates a group of related, network (вычислительная сеть) data transfer tasks.
+    // shared: The shared singleton(одиночный элемент) session object.
+    private (set) var authToken: String? {
+    // private (set):  the getter for authToken is public, but the setter is private
+        get {
                 return OAuth2TokenStorage().token
             }
-            set {
+        set {
                 OAuth2TokenStorage().token = newValue
     } }
-        func fetchOAuthToken(
-            _ code: String,
-    completion: @escaping (Result<String, Error>) -> Void ){
+    private var task: URLSessionTask?
+    private var lastCode: String?
+    
+    func fetchOAuthToken(
+                        _ code: String,
+                        completion: @escaping (Result<String, Error>) -> Void ){
+        assert(Thread.isMainThread)
+        //Thread: A thread of execution.
+        //assert(утверждать): Performs a traditional C-style assert with an optional message.
+                if task != nil {                                    // 5
+                    if lastCode != code {                           // 6
+                        task?.cancel()                              // 7
+                    } else {
+                        return                                      // 8
+                    }
+                } else {
+                    if lastCode == code {                           // 9
+                        return
+                    }
+                }
+                lastCode = code
             let request = authTokenRequest(code: code)
+        //Authorization: Авторизация;     Request: просьба
             let task = object(for: request) { [weak self] result in
+            // private func object(
+            //  for request: URLRequest,
+            //  completion: @escaping (Result<OAuthTokenResponseBody, Error>) -> Void
+            //  ) -> URLSessionTask {
                 guard let self = self else { return }
                 switch result {
                 case .success(let body):
                     let authToken = body.accessToken
+                            //  struct OAuthTokenResponseBody: Decodable {
+                            //     let accessToken: String
                     self.authToken = authToken
-                    completion(.success(authToken))
+                        DispatchQueue.main.async { completion(.success(authToken)) }
                 case .failure(let error):
-                    completion(.failure(error))
+                        DispatchQueue.main.async { completion(.failure(error)) }
     } }
             task.resume()
         }
@@ -39,16 +68,18 @@ final class OAuth2Service {
             for request: URLRequest,
             completion: @escaping (Result<OAuthTokenResponseBody, Error>) -> Void
         ) -> URLSessionTask {
+     // URLSessionTask: A task, like downloading a specific resource, performed in a URL session.
             let decoder = JSONDecoder()
             return urlSession.data(for: request) { (result: Result<Data, Error>) in
                 let response = result.flatMap { data -> Result<OAuthTokenResponseBody, Error> in
                     Result { try decoder.decode(OAuthTokenResponseBody.self, from: data) }
     }
-                completion(response)
+                DispatchQueue.main.async { completion(response) }
             }
     }
         private func authTokenRequest(code: String) -> URLRequest {
             URLRequest.makeHTTPRequest(
+                //URLRequest: A URL load request that is independent of protocol or URL scheme.
                 path: "/oauth/token"
                 + "?client_id=\(AccessKey)"
                 + "&&client_secret=\(SecretKey)"

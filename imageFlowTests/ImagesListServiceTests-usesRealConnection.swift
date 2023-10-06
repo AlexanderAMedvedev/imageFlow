@@ -6,7 +6,7 @@
 //
 @testable import imageFlow
 import XCTest
-
+//INFO works with Bundle Identifier 'ru.AlexanderAMedvedev.imageFlow92'
 final class ImagesListServiceTests: XCTestCase {
     func testFetchPhotos() {
         let service = ImagesListService()

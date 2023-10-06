@@ -38,8 +38,10 @@ final class ImagesListService {
         // make request
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        guard let token = oauth2TokenStorage.token else { print("The token is not right"); return }
-            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        guard let token = oauth2TokenStorage.token else {
+            print("The token is not right")
+            return }
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         // make task,
           // write the closure for dataTask
         task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
@@ -90,8 +92,7 @@ extension ImagesListService {
         for i in 0..<imagesPerPage {
             pagePhotos.append(Photo(id: from[i].id,
                                   size: CGSize(width: from[i].width, height: from[i].height),
-/// convert "2023-09-23T19:19:34Z": String ---> 2016-05-03?: Date
-                                  createdAt: Date(),
+                                  createdAt: convertDate(from: from[i].createdAt),
                                   description: from[i].description ?? "",
                                   thumbImageURL: from[i].urls.thumb,
                                   largeImageURL: from[i].urls.full,
@@ -100,28 +101,23 @@ extension ImagesListService {
         return pagePhotos
     }
     
-    func convertDate(from stringInput: String) -> String {
+    func convertDate(from stringInput: String?) -> Date? {
+        //check the input value(some or nil)
+        guard let stringInput = stringInput else {
+            print("The createdAt property is nil")
+            return nil
+        }
+        // prepare object to convert date from current String representation to Date
         let dateFormatterInput = DateFormatter()
-        // DateFormatter(Форматировщик) - A formatter that converts between dates and their textual representations.
         dateFormatterInput.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
-        
-        let dateFormatterUI = DateFormatter()
-        dateFormatterUI.dateStyle = .long
-        dateFormatterUI.timeStyle = .none
-        
+        // convert String -> Date
+/// clarify the -3hours change of time after String->Date conversion
         guard let date = dateFormatterInput.date(from: stringInput) else {
             print("There was an error decoding the input string date")
-            return " "
+            return nil
         }
-            //.date - Returns a date representation of a specified string that the system interprets using the receiver’s(приемник) current settings.
-        print("\(date)") // 2023-09-23 19:19:34
-        return dateFormatterUI.string(from: date)
-            // .string - Returns a string representation of a specified date that the system formats using the receiver’s current settings.
+        return date
+        //.date - Returns a date representation of a specified string that the system interprets using the receiver’s(приемник) current settings.
     }
-
-    let inputString = "2023-09-23T19:19:34Z"
-    print(convertDate(from: inputString)) // 23 сентября 2023 г.
-
-
 }
 /// finish the code

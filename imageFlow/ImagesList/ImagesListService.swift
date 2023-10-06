@@ -9,6 +9,8 @@ import Foundation
 
 final class ImagesListService {
     
+    private let oauth2TokenStorage = OAuth2TokenStorage()
+    
     static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
     
     private (set) var photos: [Photo] = []
@@ -36,19 +38,23 @@ final class ImagesListService {
         // make request
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
+        guard let token = oauth2TokenStorage.token else {
+            print("The token is not right")
+            return }
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         // make task,
           // write the closure for dataTask
         task = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
             guard let self = self else {return}
             if let error = error {
-                print(error)
+                print("HINT photos error \(error)")
                 return
             }
             
+            print("HINT photos response \(response)")
             if let response = response as? HTTPURLResponse,
                response.statusCode < 200 || response.statusCode >= 300 {
-                print(response)
-                return
+               return
             }
             
             guard let data = data else { return }
@@ -56,6 +62,7 @@ final class ImagesListService {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 let initialPhotosPage = try decoder.decode([PhotoResult].self, from: data)
+                print("HINT photos initial\(initialPhotosPage)")
                 // convert the new data to format [Photo]
                 let nextPagePhotosForTable = self.convert(initialPhotosPage)
                 // add new data to array photos within the main Thread to the end of the array photos
@@ -63,7 +70,9 @@ final class ImagesListService {
                     for i in 0..<self.imagesPerPage {
                         self.photos.append(nextPagePhotosForTable[i])
                     }
+                    print("HINT photos final \(self.photos)")
                     NotificationCenter.default.post(
+                        //post - Creates a notification(уведомление) with a given name, sender, and information and posts it to the notification center.
                             name: ImagesListService.didChangeNotification,
                             object: self,
                             userInfo: ["Photos": self.photos])
@@ -75,13 +84,15 @@ final class ImagesListService {
         }
             task!.resume()
     }
+}
+extension ImagesListService {
+    
     private func convert(_ from: [PhotoResult]) -> [Photo] {
         var pagePhotos: [Photo]=[]
         for i in 0..<imagesPerPage {
             pagePhotos.append(Photo(id: from[i].id,
                                   size: CGSize(width: from[i].width, height: from[i].height),
-/// convert "2016-05-03T11:00:28-04:00" to 2016-05-03: Date
-                                  createdAt: Date(),
+                                  createdAt: convertDate(from: from[i].createdAt),
                                   description: from[i].description ?? "",
                                   thumbImageURL: from[i].urls.thumb,
                                   largeImageURL: from[i].urls.full,
@@ -89,5 +100,24 @@ final class ImagesListService {
         }
         return pagePhotos
     }
+    
+    func convertDate(from stringInput: String?) -> Date? {
+        //check the input value(some or nil)
+        guard let stringInput = stringInput else {
+            print("The createdAt property is nil")
+            return nil
+        }
+        // prepare object to convert date from current String representation to Date
+        let dateFormatterInput = DateFormatter()
+        dateFormatterInput.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+        // convert String -> Date
+/// clarify the -3hours change of time after String->Date conversion
+        guard let date = dateFormatterInput.date(from: stringInput) else {
+            print("There was an error decoding the input string date")
+            return nil
+        }
+        return date
+        //.date - Returns a date representation of a specified string that the system interprets using the receiver’s(приемник) current settings.
+    }
 }
-// finish the code
+/// finish the code

@@ -9,7 +9,13 @@ import Foundation
 
 final class ImagesListService {
     
+    static let shared = ImagesListService()
+    
     private let oauth2TokenStorage = OAuth2TokenStorage()
+    
+    private enum NetworkError: Error {
+        case codeError
+    }
     
     static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
     
@@ -21,12 +27,12 @@ final class ImagesListService {
     
     let imagesPerPage = 10
     
-    func fetchPhotosNextPage() {
+    func fetchPhotosNextPage(completion: @escaping (Result<[Photo], Error>) -> Void) {
                 // Check, that the function is called within the main queue
         assert(Thread.isMainThread)
                 // If the task is active the next task is not started, function returns back
         if let task = task {
-            print("The page of photos is downloading")
+            print("The page of photos is already downloading")
             return
         }
                 // make GET request with parameter 'page'
@@ -48,12 +54,15 @@ final class ImagesListService {
             guard let self = self else {return}
             if let error = error {
                 print("HINT photos error \(error)")
+                DispatchQueue.main.async { completion(.failure(error)) }
                 return
             }
             
             print("HINT photos response \(response)")
             if let response = response as? HTTPURLResponse,
                response.statusCode < 200 || response.statusCode >= 300 {
+                DispatchQueue.main.async { completion(.failure(NetworkError.codeError))
+                }
                return
             }
             
@@ -62,7 +71,7 @@ final class ImagesListService {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 let initialPhotosPage = try decoder.decode([PhotoResult].self, from: data)
-                print("HINT photos initial\(initialPhotosPage)")
+              //  print("HINT photos initial\(initialPhotosPage)")
                 // convert the new data to format [Photo]
                 let nextPagePhotosForTable = self.convert(initialPhotosPage)
                 // add new data to array photos within the main Thread to the end of the array photos
@@ -70,16 +79,21 @@ final class ImagesListService {
                     for i in 0..<self.imagesPerPage {
                         self.photos.append(nextPagePhotosForTable[i])
                     }
-                    print("HINT photos final \(self.photos)")
+                   // print("HINT photos final \(self.photos)")
+                    
                     NotificationCenter.default.post(
                         //post - Creates a notification(уведомление) with a given name, sender, and information and posts it to the notification center.
                             name: ImagesListService.didChangeNotification,
                             object: self,
                             userInfo: ["Photos": self.photos])
+                    
+                    self.lastLoadedPage = nextPage
                     self.task = nil
+                    completion(.success(self.photos))
                 }
             } catch {
                 print("Failed to parse the downloaded file")
+                DispatchQueue.main.async { completion(.failure(error)) }
             }
         }
             task!.resume()

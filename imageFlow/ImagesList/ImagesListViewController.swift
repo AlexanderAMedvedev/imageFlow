@@ -6,12 +6,14 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ImagesListViewController: UIViewController {
 //Q: 1) `tableView.register(ImagesListCell.self,...`
     
     @IBOutlet private var tableView: UITableView!
-    
+    private let imagesListService = ImagesListService.shared
+
     private let ShowSingleImageSegueIdentifier = "ShowSingleImage"
     
     private let photosName: [String] = Array(0..<20).map{ "\($0)" }
@@ -46,14 +48,23 @@ final class ImagesListViewController: UIViewController {
             cell.likeButton.imageView?.image = UIImage(named: "noLike")
         }
         
-        let imageName = photosName[indexPath.row]
+        
+        let url = URL(string: imagesListService.photos[indexPath.row].thumbImageURL)
+        let placeHolder = UIImage(named: "scribble_variable")
+        cell.imageCell.kf.indicatorType = .activity
+        cell.imageCell.kf.setImage(with: url, placeholder: placeHolder)
+        
+        guard let createdAt = imagesListService.photos[indexPath.row].createdAt else { return }
+        cell.dateCell.text = dateFormatter.string(from: createdAt)
+        /* mock cells
+         let imageName = photosName[indexPath.row]
         if let image = UIImage(named: imageName) {
             cell.imageCell.image = image
         } else {
             return
         }
-        
         cell.dateCell.text = dateFormatter.string(from: Date())
+         //end of mock cells */
     }
 }
 
@@ -75,7 +86,7 @@ extension ImagesListViewController {
 extension ImagesListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return photosName.count
+        return imagesListService.photos.count //photosName.count
     }
         
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

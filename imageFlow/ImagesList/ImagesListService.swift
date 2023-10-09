@@ -58,7 +58,7 @@ final class ImagesListService {
                 return
             }
             
-            print("HINT photos response \(response)")
+           // print("HINT photos response \(response)")
             if let response = response as? HTTPURLResponse,
                response.statusCode < 200 || response.statusCode >= 300 {
                 DispatchQueue.main.async { completion(.failure(NetworkError.codeError))

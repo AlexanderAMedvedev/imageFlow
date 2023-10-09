@@ -86,6 +86,7 @@ extension ImagesListViewController {
 extension ImagesListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("HINT numberOfRowsInSection = \(imagesListService.photos.count)")
         return imagesListService.photos.count //photosName.count
     }
         
@@ -106,19 +107,34 @@ extension ImagesListViewController: UITableViewDataSource {
 extension ImagesListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
+        let widthImageView = tableView.contentSize.width-16-16
+        let aspectRatio = imagesListService.photos[indexPath.row].size.height/imagesListService.photos[indexPath.row].size.width
+        let heightCell = 4+aspectRatio*widthImageView+4
+       // print("HINT The height of the cell \(indexPath.row) is set")
+        return heightCell
+       /* For mock pictures
         let imageName = photosName[indexPath.row]
         if let image = UIImage(named: imageName) {
             let widthImageView = tableView.contentSize.width-16-16
             let aspectRatio = image.size.height/image.size.width
             let heightCell = 4+aspectRatio*widthImageView+4
+            print("HINT The height of the cell \(indexPath.row) is set")
             return heightCell
         } else {
             print("Can not make the image for determining the heightForRow.")
             return 34
-        }
+        }  */
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: ShowSingleImageSegueIdentifier, sender: indexPath)
     }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row + 1 == imagesListService.photos.count {
+            //print("HINT Time to download the next page of photos.")
+        }
+    }
+    
 }

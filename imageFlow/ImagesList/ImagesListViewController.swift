@@ -111,17 +111,18 @@ extension ImagesListViewController {
         guard let lastLoadedPage = imagesListService.lastLoadedPage else {
             print("lastLoadedPage is nil!")
             return }
-        let indexPhotoNextPage = (lastLoadedPage-1)*imagesListService.imagesPerPage
+        let imagesPerPage = imagesListService.imagesPerPage
+        let indexPhotoNextPage = (lastLoadedPage-1)*imagesPerPage
+        
+        var indexPaths: [IndexPath] = []
+        for i in 0...(imagesPerPage - 1) {
+            indexPaths.append(IndexPath(row: indexPhotoNextPage + i,section: 0))
+        }
+        
         tableView.performBatchUpdates {
-            self.tableView.insertRows(at: [
-                IndexPath(row: indexPhotoNextPage, section: 0),
-                IndexPath(row: indexPhotoNextPage+1, section: 0),
-                IndexPath(row: indexPhotoNextPage+2, section: 0),
-                IndexPath(row: indexPhotoNextPage+3, section: 0),
-                IndexPath(row: indexPhotoNextPage+4, section: 0)
-            ], with: .automatic)
+            self.tableView.insertRows(at: indexPaths,with: .automatic)
         } completion: { _ in
-            //print("HINT the table is longer")
+            print("HINT the table is longer")
         }
     }
 }

@@ -25,7 +25,7 @@ final class ImagesListService {
     
     private var task: URLSessionDataTask?
     
-    let imagesPerPage = 5 //10
+    let imagesPerPage = 10
     
     func fetchPhotosNextPage(completion: @escaping (Result<[Photo], Error>) -> Void) {
                 // Check, that the function is called within the main queue

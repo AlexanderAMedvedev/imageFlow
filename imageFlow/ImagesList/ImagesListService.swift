@@ -21,11 +21,11 @@ final class ImagesListService {
     
     private (set) var photos: [Photo] = []
     
-    private var lastLoadedPage: Int?
+    private (set) var lastLoadedPage: Int?
     
     private var task: URLSessionDataTask?
     
-    let imagesPerPage = 10
+    let imagesPerPage = 5 //10
     
     func fetchPhotosNextPage(completion: @escaping (Result<[Photo], Error>) -> Void) {
                 // Check, that the function is called within the main queue

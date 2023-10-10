@@ -42,12 +42,18 @@ final class ImagesListViewController: UIViewController {
     }
 
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
+        /* for mock data
         if indexPath.row%2 == 1 {
             cell.likeButton.imageView?.image = UIImage(named: "Like")
         } else {
             cell.likeButton.imageView?.image = UIImage(named: "noLike")
+        } */
+        let photoData = imagesListService.photos[indexPath.row]
+        if photoData.likedByUser == false {
+            cell.likeButton.imageView?.image = UIImage(named: "noLike")
+        } else if photoData.likedByUser == true {
+            cell.likeButton.imageView?.image = UIImage(named: "Like")
         }
-        
         
         let url = URL(string: imagesListService.photos[indexPath.row].thumbImageURL)
         let placeHolder = UIImage(named: "scribble_variable")
@@ -81,6 +87,43 @@ extension ImagesListViewController {
             }
         }
     
+    private func fetchPhotosNextPageNextDownload() {
+        imagesListService.fetchPhotosNextPage(){ [weak self] result in
+            DispatchQueue.main.async  {
+                guard let self = self else { return }
+                switch result {
+                    case .success:
+                       // print("HINT json для фото загружен")
+                        //UIBlockingProgressHUD.dismiss()
+                        self.updateTableViewAnimated()
+                    case .failure:
+                        //UIBlockingProgressHUD.dismiss()
+                        var alert = UIAlertController(title: "Что-то пошло не так(", message: "Не удалось загрузить фото в json-файле", preferredStyle: .alert)
+                        let action = UIAlertAction(title: "Ок", style: .default)
+                        alert.addAction(action)
+                        self.present(alert, animated: true)
+                }
+            }
+        }
+    }
+    
+    private func updateTableViewAnimated() {
+        guard let lastLoadedPage = imagesListService.lastLoadedPage else {
+            print("lastLoadedPage is nil!")
+            return }
+        let indexPhotoNextPage = (lastLoadedPage-1)*imagesListService.imagesPerPage
+        tableView.performBatchUpdates {
+            self.tableView.insertRows(at: [
+                IndexPath(row: indexPhotoNextPage, section: 0),
+                IndexPath(row: indexPhotoNextPage+1, section: 0),
+                IndexPath(row: indexPhotoNextPage+2, section: 0),
+                IndexPath(row: indexPhotoNextPage+3, section: 0),
+                IndexPath(row: indexPhotoNextPage+4, section: 0)
+            ], with: .automatic)
+        } completion: { _ in
+            //print("HINT the table is longer")
+        }
+    }
 }
 
 extension ImagesListViewController: UITableViewDataSource {
@@ -133,7 +176,8 @@ extension ImagesListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row + 1 == imagesListService.photos.count {
-            //print("HINT Time to download the next page of photos.")
+            print("HINT Time to download the next page of photos.")
+            fetchPhotosNextPageNextDownload()
         }
     }
     

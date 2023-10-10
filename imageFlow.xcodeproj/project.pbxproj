@@ -26,7 +26,7 @@
 		11C5D82C2AC066AA00E4DE59 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C5D82B2AC066AA00E4DE59 /* TabBarController.swift */; };
 		11C5D8362ACEB08400E4DE59 /* ImagesListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C5D8352ACEB08400E4DE59 /* ImagesListService.swift */; };
 		11C5D8382ACEB0C500E4DE59 /* ImagesListStructures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C5D8372ACEB0C500E4DE59 /* ImagesListStructures.swift */; };
-		11C5D8402ACEB63000E4DE59 /* ImagesListServiceTests-usesRealConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C5D83F2ACEB63000E4DE59 /* ImagesListServiceTests-usesRealConnection.swift */; };
+		11C5D8402ACEB63000E4DE59 /* ImagesListServiceTests-usesRealConnection(willNotWorkAsImagesListService changed).swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C5D83F2ACEB63000E4DE59 /* ImagesListServiceTests-usesRealConnection(willNotWorkAsImagesListService changed).swift */; };
 		11C7A6F52A83915D0032FB7F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C7A6F42A83915D0032FB7F /* Constants.swift */; };
 		11C7A6F72A83B5670032FB7F /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C7A6F62A83B5670032FB7F /* AuthViewController.swift */; };
 		11C7A6FA2A83B6290032FB7F /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C7A6F92A83B6290032FB7F /* WebViewViewController.swift */; };
@@ -68,7 +68,7 @@
 		11C5D8352ACEB08400E4DE59 /* ImagesListService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListService.swift; sourceTree = "<group>"; };
 		11C5D8372ACEB0C500E4DE59 /* ImagesListStructures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListStructures.swift; sourceTree = "<group>"; };
 		11C5D83D2ACEB63000E4DE59 /* imageFlowTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = imageFlowTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		11C5D83F2ACEB63000E4DE59 /* ImagesListServiceTests-usesRealConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImagesListServiceTests-usesRealConnection.swift"; sourceTree = "<group>"; };
+		11C5D83F2ACEB63000E4DE59 /* ImagesListServiceTests-usesRealConnection(willNotWorkAsImagesListService changed).swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ImagesListServiceTests-usesRealConnection(willNotWorkAsImagesListService changed).swift"; sourceTree = "<group>"; };
 		11C7A6F42A83915D0032FB7F /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		11C7A6F62A83B5670032FB7F /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		11C7A6F92A83B6290032FB7F /* WebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
@@ -190,7 +190,7 @@
 		11C5D83E2ACEB63000E4DE59 /* imageFlowTests */ = {
 			isa = PBXGroup;
 			children = (
-				11C5D83F2ACEB63000E4DE59 /* ImagesListServiceTests-usesRealConnection.swift */,
+				11C5D83F2ACEB63000E4DE59 /* ImagesListServiceTests-usesRealConnection(willNotWorkAsImagesListService changed).swift */,
 			);
 			path = imageFlowTests;
 			sourceTree = "<group>";
@@ -346,7 +346,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				11C5D8402ACEB63000E4DE59 /* ImagesListServiceTests-usesRealConnection.swift in Sources */,
+				11C5D8402ACEB63000E4DE59 /* ImagesListServiceTests-usesRealConnection(willNotWorkAsImagesListService changed).swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

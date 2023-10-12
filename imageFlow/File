@@ -1,20 +1,11 @@
-    func fetch(url: URL, handler: @escaping (Result<Data, Error>) -> Void) {
-    
-            networkClient.fetch(url: mostPopularMoviesUrl) { result in
-            switch result {
-             case .failure(let error):
-                handler(.failure(error))
-                return
-             case .success(let data):
-                //construct the AllMostPopularMovies object
-                //return it using handler
-                do {
-                    //JSONDecoder() - An object that decodes instances of a data type from JSON objects.
-                    //decode - Returns a value of the type you specify, decoded from a JSON object.
-                    let allMostPopularMovies = try JSONDecoder().decode(AllMostPopularMovies.self, from: data)
-                    handler(.success(allMostPopularMovies))
-                } catch {
-                    print("Failed to parse the downloaded list of movies")
-                    handler(.failure(error))
-                }
-            }
+        
+        //1. write in the service the new value of Like
+        //  call the method with the parameters
+        //  make http request (POST/DELETE)
+        //  have a look at the data in both cases
+        
+        //2. write in the local photos the new value of Like
+             make the element for the photos array
+             change the current element with the new one
+             
+        //3. change the symbol of like in the cell

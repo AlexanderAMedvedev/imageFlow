@@ -41,7 +41,7 @@ final class ImagesListViewController: UIViewController {
         // The custom distance that the content view is inset(вставка) from the safe area or scroll view edges.
     }
 
-    func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
+    func configCell(for cell: ImagesListCell, with indexPath: IndexPath, moment: String) {
         /* for mock data
         if indexPath.row%2 == 1 {
             cell.likeButton.imageView?.image = UIImage(named: "Like")
@@ -55,13 +55,17 @@ final class ImagesListViewController: UIViewController {
             cell.likeButton.imageView?.image = UIImage(named: "Like")
         }
         
-        let url = URL(string: imagesListService.photos[indexPath.row].thumbImageURL)
-        let placeHolder = UIImage(named: "scribble_variable")
-        cell.imageCell.kf.indicatorType = .activity
-        cell.imageCell.kf.setImage(with: url, placeholder: placeHolder)
-        
-        guard let createdAt = imagesListService.photos[indexPath.row].createdAt else { return }
-        cell.dateCell.text = dateFormatter.string(from: createdAt)
+        if moment == "initialConfig" {
+            let url = URL(string: imagesListService.photos[indexPath.row].thumbImageURL)
+            let placeHolder = UIImage(named: "scribble_variable")
+            cell.imageCell.kf.indicatorType = .activity
+            cell.imageCell.kf.setImage(with: url, placeholder: placeHolder)
+            
+            guard let createdAt = imagesListService.photos[indexPath.row].createdAt else { return }
+            cell.dateCell.text = dateFormatter.string(from: createdAt)
+            
+            cell.delegate = self
+        }
         /* mock cells
          let imageName = photosName[indexPath.row]
         if let image = UIImage(named: imageName) {
@@ -143,7 +147,7 @@ extension ImagesListViewController: UITableViewDataSource {
             return UITableViewCell()
         }
                 
-        configCell(for: imageListCell, with: indexPath)
+        configCell(for: imageListCell, with: indexPath, moment: "initialConfig")
         return imageListCell
     }
 }
@@ -179,6 +183,36 @@ extension ImagesListViewController: UITableViewDelegate {
         if indexPath.row + 1 == imagesListService.photos.count {
             print("HINT Time to download the next page of photos.")
             fetchPhotosNextPageNextDownload()
+        }
+    }
+    
+}
+extension ImagesListViewController: ImagesListCellDelegate {
+    
+    func imageListCellDidTapLike(_ cell: ImagesListCell) {
+        //print("HINT_ImagesListViewController didTapLikeButton")
+        guard let index = tableView.indexPath(for: cell) else {
+            print("Can not get the indexPath of the tapped like")
+        return
+        }
+        let photoId = imagesListService.photos[index.row].id
+        let photoLikedByUser = imagesListService.photos[index.row].likedByUser
+        //print("HINT_ImagesListViewController didTapLikeButton: \(index.row), \(photoId)")
+        //print("HINT_imageListCellDidTapLike LikeToBeSet:\(!photoLikedByUser)")
+        UIBlockingProgressHUD.show()
+        imagesListService.writeLike(indexPhoto: index.row, photoId: photoId, isLikeToBeSet: !photoLikedByUser) { result in
+            switch result {
+            case .success:
+                 self.configCell(for: cell, with: index, moment: "changeLike")
+                 UIBlockingProgressHUD.dismiss()
+             case .failure:
+                    UIBlockingProgressHUD.dismiss()
+                    var alert = UIAlertController(title: "Что-то пошло не так(", message: "Не удалось изменить состояние лайка на сервере", preferredStyle: .alert)
+                    let action = UIAlertAction(title: "Ок", style: .default)
+                    alert.addAction(action)
+                    self.present(alert, animated: true)
+                }
+            
         }
     }
     

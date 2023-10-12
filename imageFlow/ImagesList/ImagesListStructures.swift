@@ -7,6 +7,10 @@
 
 import Foundation
 
+struct PhotoWithChangedLike: Decodable {
+    let photo: PhotoResult
+}
+
 struct PhotoResult: Decodable {
     let id: String
     let width: Int

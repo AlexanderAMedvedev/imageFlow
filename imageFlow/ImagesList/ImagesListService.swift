@@ -25,6 +25,8 @@ final class ImagesListService {
     
     private var task: URLSessionDataTask?
     
+    private var taskSetLike: URLSessionDataTask?
+    
     let imagesPerPage = 10
     
     func fetchPhotosNextPage(completion: @escaping (Result<[Photo], Error>) -> Void) {
@@ -67,6 +69,7 @@ final class ImagesListService {
             }
             
             guard let data = data else { return }
+            //print("HINT data_10Photos: \(data)")
             do {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -79,13 +82,13 @@ final class ImagesListService {
                     for i in 0..<self.imagesPerPage {
                         self.photos.append(nextPagePhotosForTable[i])
                     }
-                   // print("HINT photos final \(self.photos)")
+                   //print("HINT_photos final: \(self.photos)")
                     
-                    NotificationCenter.default.post(
+                   /* NotificationCenter.default.post(
                         //post - Creates a notification(уведомление) with a given name, sender, and information and posts it to the notification center.
                             name: ImagesListService.didChangeNotification,
                             object: self,
-                            userInfo: ["Photos": self.photos])
+                            userInfo: ["Photos": self.photos])*/
                     
                     self.lastLoadedPage = nextPage
                     self.task = nil
@@ -133,5 +136,69 @@ extension ImagesListService {
         return date
         //.date - Returns a date representation of a specified string that the system interprets using the receiver’s(приемник) current settings.
     }
+    
 }
+
+extension ImagesListService {
+    
+    func writeLike(indexPhoto: Int,photoId: String, isLikeToBeSet: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
+        assert(Thread.isMainThread)
+        taskSetLike?.cancel()
+        
+        guard let url = URL(string: "https://api.unsplash.com/photos/\(photoId)/like") else {return}
+        var request = URLRequest(url: url)
+        if isLikeToBeSet == true {
+            request.httpMethod = "POST"
+        } else if isLikeToBeSet == false {
+            request.httpMethod = "DELETE"
+        }
+        guard let token = oauth2TokenStorage.token else {
+            print("The token is not right")
+            return
+        }
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        taskSetLike = URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            if let error = error {
+                DispatchQueue.main.async { completion(.failure(error)) }
+                return
+            }
+            if let response = response as? HTTPURLResponse,
+               response.statusCode < 200 || response.statusCode >= 300 {
+                
+                DispatchQueue.main.async { completion(.failure(NetworkError.codeError))
+                }
+                return
+            }
+                //print("HINT_changeLike response: \(response)")
+            
+            guard let data = data else { return }
+           // print(data)
+            do {
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                let photoDidChangeLike = try decoder.decode(PhotoWithChangedLike.self, from: data)
+                guard let self = self else { return }
+                DispatchQueue.main.async {
+                    //print("HINT_PhotoChangedLike \(photoDidChangeLike)")
+                    let photo = photoDidChangeLike.photo
+                    let onePhoto: Photo = Photo(id: photo.id, 
+                                                size: CGSize(width: photo.width, height: photo.height),
+                                                createdAt: self.convertDate(from: photo.createdAt),
+                                                description: photo.description ?? "",
+                                                thumbImageURL: photo.urls.thumb,
+                                                largeImageURL: photo.urls.full,
+                                                likedByUser: photo.likedByUser)
+                    self.photos[indexPhoto] = onePhoto
+                    //print("HINT_Photo[changedLike]: \(self.photos[indexPhoto])")
+                    completion(.success(()))
+                    self.taskSetLike = nil
+                }
+            } catch {
+                print("Failed to parse the downloaded data")
+                DispatchQueue.main.async { completion(.failure(error)) }
+            }
+        }
+            taskSetLike!.resume()
+    }
+    }
 /// finish the code

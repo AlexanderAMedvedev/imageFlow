@@ -8,9 +8,12 @@
 import Foundation
 import UIKit
 import Kingfisher
+import WebKit
 
 final class ProfileViewController: UIViewController {
     
+    private let oauth2TokenStorage = OAuth2TokenStorage()
+
     static var exitImage = UIImage(named: "ipad.and.arrow.forward")!
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -84,7 +87,29 @@ final class ProfileViewController: UIViewController {
         return exitButton
     }
     
-    @objc private func didTapExitButton() {}
+    @objc private func didTapExitButton() {
+       // print("HINT_profileViewController: tapped Exit Button")
+        oauth2TokenStorage.token = nil
+        //print("HINT_profileViewController: token \(oauth2TokenStorage.token)")
+        clean()
+        
+        guard let window = UIApplication.shared.windows.first else { fatalError("Invalid Configuration") }
+        let viewController = SplashViewController()
+        window.rootViewController = viewController
+    }
+    
+    private func clean() {
+        // Очищаем все куки из хранилища.
+        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+        // Запрашиваем все данные из локального хранилища.
+        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+            // Массив полученных записей удаляем из хранилища.
+            records.forEach { record in
+                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+            }
+        }
+       // print("HINT_pVC: browser is cleaned")
+    }
     
     @discardableResult private func addNameFamilyNameLabel(_ fullName: String) -> UILabel {
         let nameFamilyNameLabel = UILabel()

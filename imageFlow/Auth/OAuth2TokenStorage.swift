@@ -21,6 +21,15 @@ final class OAuth2TokenStorage {
         //return storedToken
         }
         set {
+            if newValue == nil {
+                let removeSuccessful: Bool = KeychainWrapper.standard.removeObject(forKey: "Auth token")
+                guard removeSuccessful else {
+                    print("The token is not removed from KeyChain")
+                    return
+                }
+                        print("The token is removed from KeyChain")
+                return
+            }
             guard let authToken = newValue else {
                 print("Did not open optional with the token")
                 return

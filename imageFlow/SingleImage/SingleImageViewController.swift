@@ -14,7 +14,8 @@ final class SingleImageViewController: UIViewController {
     
     @IBOutlet var imageView: UIImageView!
     
-    var image: UIImage!
+    //var image: UIImage! //for mock-data
+    var imageUrl: String!
     
     @IBAction func didTapBack(_ sender: UIButton) {
         dismiss(animated: true, completion: nil)
@@ -23,7 +24,7 @@ final class SingleImageViewController: UIViewController {
     
     
     @IBAction func didTapShare(_ sender: UIButton) {
-        let activityView =  UIActivityViewController(activityItems: [image as Any], applicationActivities: nil)
+        let activityView =  UIActivityViewController(activityItems: [imageView.image as Any], applicationActivities: nil)
         // UIActivityViewController -
         present(activityView, animated: true, completion: nil)
         // `present` - Presents a view controller modally.
@@ -31,14 +32,41 @@ final class SingleImageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        imageView.image = image
         
-        scrollView.minimumZoomScale = 0.1
-        scrollView.maximumZoomScale = 1.25
+        UIBlockingProgressHUD.show()
+        //imageUrl = "zero"
+        let fullPhotoUrl = URL(string: imageUrl)
+        imageView.kf.setImage(with: fullPhotoUrl) { [weak self] result in
+            guard let self = self else {return}
+            switch result {
+            case .success:
+                UIBlockingProgressHUD.dismiss()
+                self.scrollView.minimumZoomScale = 0.7 //0.1
+                self.scrollView.maximumZoomScale = 3   //1.25
+                self.rescaleAndCenterImageInScrollView(image: imageView.image!)
+            case .failure:
+                UIBlockingProgressHUD.dismiss()
+                self.showAlert()
+            }
+        }
+        //imageView.image = image //for mock-data
         
-        rescaleAndCenterImageInScrollView(image: imageView.image!)
+        
     }
-    
+    private func showAlert() {
+        var alert = UIAlertController(title: "Что-то пошло не так(", message: "Попробовать ещё раз?", preferredStyle: .alert)
+        
+        let actionNo = UIAlertAction(title: "Не надо", style: .default)
+        alert.addAction(actionNo)
+        
+        let actionRepeat = UIAlertAction(title: "Повторить", style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            self.viewDidLoad()
+        }
+        alert.addAction(actionRepeat)
+        
+        present(alert, animated: true)
+    }
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
         // 'constants'
         let minZoomScale = scrollView.minimumZoomScale
@@ -46,8 +74,8 @@ final class SingleImageViewController: UIViewController {
         view.layoutIfNeeded()
         // rescale to fully fit the screen
         let visibleRectSize = scrollView.bounds.size
-        let imageSize = image.size
-        
+        let imageSize = image.size //for mock data
+        //print("HINT_rescale \(imageSize)")
         let hScale = visibleRectSize.width / imageSize.width
         let vScale = visibleRectSize.height / imageSize.height
         //variant by myself

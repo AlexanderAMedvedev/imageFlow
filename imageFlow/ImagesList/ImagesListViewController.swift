@@ -84,8 +84,10 @@ extension ImagesListViewController {
             if segue.identifier == ShowSingleImageSegueIdentifier {
                 let viewController = segue.destination as! SingleImageViewController
                 let indexPath = sender as! IndexPath
-                let image = UIImage(named: photosName[indexPath.row])
-                viewController.image = image
+                let urlFullPhoto = imagesListService.photos[indexPath.row].largeImageURL
+                viewController.imageUrl = urlFullPhoto
+                // let image = UIImage(named: photosName[indexPath.row]) //for mock data
+                //viewController.image = image //for mock data
             } else {
                 super.prepare(for: segue, sender: sender)
             }
@@ -200,19 +202,21 @@ extension ImagesListViewController: ImagesListCellDelegate {
         //print("HINT_ImagesListViewController didTapLikeButton: \(index.row), \(photoId)")
         //print("HINT_imageListCellDidTapLike LikeToBeSet:\(!photoLikedByUser)")
         UIBlockingProgressHUD.show()
-        imagesListService.writeLike(indexPhoto: index.row, photoId: photoId, isLikeToBeSet: !photoLikedByUser) { result in
-            switch result {
-            case .success:
-                 self.configCell(for: cell, with: index, moment: "changeLike")
-                 UIBlockingProgressHUD.dismiss()
-             case .failure:
+        imagesListService.writeLike(indexPhoto: index.row, photoId: photoId, isLikeToBeSet: !photoLikedByUser) { [weak self] result in
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                switch result {
+                case .success:
+                    self.configCell(for: cell, with: index, moment: "changeLike")
+                    UIBlockingProgressHUD.dismiss()
+                case .failure:
                     UIBlockingProgressHUD.dismiss()
                     var alert = UIAlertController(title: "Что-то пошло не так(", message: "Не удалось изменить состояние лайка на сервере", preferredStyle: .alert)
                     let action = UIAlertAction(title: "Ок", style: .default)
                     alert.addAction(action)
                     self.present(alert, animated: true)
                 }
-            
+            }
         }
     }
     

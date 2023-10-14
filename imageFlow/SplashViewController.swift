@@ -123,9 +123,11 @@ extension SplashViewController: AuthViewControllerDelegate {
                     case .success:
                        // print("HINT json для фото загружен")
                         UIBlockingProgressHUD.dismiss()
+                    
                         self.switchToTabBarController()
                     case .failure:
                         UIBlockingProgressHUD.dismiss()
+                    
                         var alert = UIAlertController(title: "Что-то пошло не так(", message: "Не удалось загрузить фото в json-файле", preferredStyle: .alert)
                         let action = UIAlertAction(title: "Ок", style: .default)
                         alert.addAction(action)

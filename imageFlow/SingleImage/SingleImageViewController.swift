@@ -53,6 +53,7 @@ final class SingleImageViewController: UIViewController {
         
         
     }
+    
     private func showAlert() {
         var alert = UIAlertController(title: "Что-то пошло не так(", message: "Попробовать ещё раз?", preferredStyle: .alert)
         
@@ -67,6 +68,7 @@ final class SingleImageViewController: UIViewController {
         
         present(alert, animated: true)
     }
+    
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
         // 'constants'
         let minZoomScale = scrollView.minimumZoomScale

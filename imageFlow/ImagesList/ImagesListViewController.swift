@@ -15,8 +15,8 @@ final class ImagesListViewController: UIViewController {
     private let imagesListService = ImagesListService.shared
 
     private let ShowSingleImageSegueIdentifier = "ShowSingleImage"
-    
-    private let photosName: [String] = Array(0..<20).map{ "\($0)" }
+    // In case of mock photos:
+    //private let photosName: [String] = Array(0..<20).map{ "\($0)" }
     // @frozen struct Array<Element> - An ordered, random-access (произвольный доступ) collection.
     // func map<T>(_ transform: (Self.Element) throws -> T) rethrows -> [T]
     // Returns an array containing the results of mapping the given closure over the sequence’s elements

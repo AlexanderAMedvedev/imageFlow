@@ -44,7 +44,7 @@ final class ProfileImageService {
                     guard let self = self else { return }
                     self.profileSmallImageURL = UserResult.profileImageURLs["small"]
                     
-                    print("HINT Avatar URL \(self.profileSmallImageURL!)")
+                    //print("HINT Avatar URL \(self.profileSmallImageURL!)")
                     
                     DispatchQueue.main.async { completion(.success(self.profileSmallImageURL!))
                         self.task = nil

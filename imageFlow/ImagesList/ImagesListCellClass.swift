@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import Kingfisher
+import ProgressHUD
 
 protocol ImagesListCellDelegate: AnyObject {
     func imageListCellDidTapLike(_ cell: ImagesListCell)
@@ -23,6 +24,7 @@ final class ImagesListCell: UITableViewCell {
     
     @IBAction func didTapLikeButton(_ sender: UIButton) {
         //print("didTapLikeButton")
+        UIBlockingProgressHUD.show()
         delegate?.imageListCellDidTapLike(self)
     }
     

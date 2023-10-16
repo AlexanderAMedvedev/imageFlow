@@ -128,7 +128,7 @@ extension ImagesListViewController {
         tableView.performBatchUpdates {
             self.tableView.insertRows(at: indexPaths,with: .automatic)
         } completion: { _ in
-            print("HINT the table is longer")
+            //print("HINT the table is longer")
         }
     }
 }
@@ -136,7 +136,7 @@ extension ImagesListViewController {
 extension ImagesListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("HINT numberOfRowsInSection = \(imagesListService.photos.count)")
+        //print("HINT numberOfRowsInSection = \(imagesListService.photos.count)")
         return imagesListService.photos.count //photosName.count
     }
         
@@ -183,7 +183,7 @@ extension ImagesListViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row + 1 == imagesListService.photos.count {
-            print("HINT Time to download the next page of photos.")
+            //print("HINT Time to download the next page of photos.")
             fetchPhotosNextPageNextDownload()
         }
     }
@@ -201,7 +201,6 @@ extension ImagesListViewController: ImagesListCellDelegate {
         let photoLikedByUser = imagesListService.photos[index.row].likedByUser
         //print("HINT_ImagesListViewController didTapLikeButton: \(index.row), \(photoId)")
         //print("HINT_imageListCellDidTapLike LikeToBeSet:\(!photoLikedByUser)")
-        UIBlockingProgressHUD.show()
         imagesListService.writeLike(indexPhoto: index.row, photoId: photoId, isLikeToBeSet: !photoLikedByUser) { [weak self] result in
             DispatchQueue.main.async {
                 guard let self = self else { return }

@@ -27,7 +27,7 @@ final class OAuth2TokenStorage {
                     print("The token is not removed from KeyChain")
                     return
                 }
-                        print("The token is removed from KeyChain")
+                        //print("The token is removed from KeyChain")
                 return
             }
             guard let authToken = newValue else {

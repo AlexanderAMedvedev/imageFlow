@@ -17,7 +17,7 @@ final class ImagesListService {
         case codeError
     }
     
-    static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
+    //static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
     
     private (set) var photos: [Photo] = []
     
@@ -28,6 +28,12 @@ final class ImagesListService {
     private var taskSetLike: URLSessionDataTask?
     
     let imagesPerPage = 10
+    
+    private lazy var dateFormatter: DateFormatter = {
+        let dateFormatterInput = DateFormatter()
+        dateFormatterInput.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+        return dateFormatterInput
+    }()
     
     func fetchPhotosNextPage(completion: @escaping (Result<[Photo], Error>) -> Void) {
                 // Check, that the function is called within the main queue
@@ -74,7 +80,7 @@ final class ImagesListService {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 let initialPhotosPage = try decoder.decode([PhotoResult].self, from: data)
-              //  print("HINT photos initial\(initialPhotosPage)")
+                //print("HINT photos initial\(initialPhotosPage)")
                 // convert the new data to format [Photo]
                 let nextPagePhotosForTable = self.convert(initialPhotosPage)
                 // add new data to array photos within the main Thread to the end of the array photos
@@ -124,12 +130,9 @@ extension ImagesListService {
             print("The createdAt property is nil")
             return nil
         }
-        // prepare object to convert date from current String representation to Date
-        let dateFormatterInput = DateFormatter()
-        dateFormatterInput.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
         // convert String -> Date
 /// clarify the -3hours change of time after String->Date conversion
-        guard let date = dateFormatterInput.date(from: stringInput) else {
+        guard let date = dateFormatter.date(from: stringInput) else {
             print("There was an error decoding the input string date")
             return nil
         }

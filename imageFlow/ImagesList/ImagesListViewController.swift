@@ -15,12 +15,6 @@ final class ImagesListViewController: UIViewController {
     private let imagesListService = ImagesListService.shared
 
     private let ShowSingleImageSegueIdentifier = "ShowSingleImage"
-    // In case of mock photos:
-    //private let photosName: [String] = Array(0..<20).map{ "\($0)" }
-    // @frozen struct Array<Element> - An ordered, random-access (произвольный доступ) collection.
-    // func map<T>(_ transform: (Self.Element) throws -> T) rethrows -> [T]
-    // Returns an array containing the results of mapping the given closure over the sequence’s elements
-    // (замыкание на элементах последовательности.)
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -35,19 +29,21 @@ final class ImagesListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
         // var contentInset: UIEdgeInsets { get set }
         // The custom distance that the content view is inset(вставка) from the safe area or scroll view edges.
+        NotificationCenter.default.addObserver(
+             forName: ImagesListService.didChangeNotification,
+                 object: nil,
+                 queue: .main
+             ) {  [weak self] _ in
+                 guard let self = self else { return }
+                 self.updateTableViewAnimated()
+             }
     }
 
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath, moment: String) {
-        /* for mock data
-        if indexPath.row%2 == 1 {
-            cell.likeButton.imageView?.image = UIImage(named: "Like")
-        } else {
-            cell.likeButton.imageView?.image = UIImage(named: "noLike")
-        } */
+
         let photoData = imagesListService.photos[indexPath.row]
         if photoData.likedByUser == false {
             cell.likeButton.imageView?.image = UIImage(named: "noLike")
@@ -62,19 +58,10 @@ final class ImagesListViewController: UIViewController {
             cell.imageCell.kf.setImage(with: url, placeholder: placeHolder)
             
             guard let createdAt = imagesListService.photos[indexPath.row].createdAt else { return }
-            cell.dateCell.text = dateFormatter.string(from: createdAt)
+            cell.dateCell.text = dateFormatter.string(from: createdAt) 
             
             cell.delegate = self
         }
-        /* mock cells
-         let imageName = photosName[indexPath.row]
-        if let image = UIImage(named: imageName) {
-            cell.imageCell.image = image
-        } else {
-            return
-        }
-        cell.dateCell.text = dateFormatter.string(from: Date())
-         //end of mock cells */
     }
 }
 
@@ -86,8 +73,6 @@ extension ImagesListViewController {
                 let indexPath = sender as! IndexPath
                 let urlFullPhoto = imagesListService.photos[indexPath.row].largeImageURL
                 viewController.imageUrl = urlFullPhoto
-                // let image = UIImage(named: photosName[indexPath.row]) //for mock data
-                //viewController.image = image //for mock data
             } else {
                 super.prepare(for: segue, sender: sender)
             }
@@ -98,12 +83,9 @@ extension ImagesListViewController {
             DispatchQueue.main.async  {
                 guard let self = self else { return }
                 switch result {
-                    case .success:
-                       // print("HINT json для фото загружен")
-                        //UIBlockingProgressHUD.dismiss()
-                        self.updateTableViewAnimated()
-                    case .failure:
-                        //UIBlockingProgressHUD.dismiss()
+                case .success: 
+                    break
+                case .failure:
                         var alert = UIAlertController(title: "Что-то пошло не так(", message: "Не удалось загрузить фото в json-файле", preferredStyle: .alert)
                         let action = UIAlertAction(title: "Ок", style: .default)
                         alert.addAction(action)
@@ -119,7 +101,6 @@ extension ImagesListViewController {
             return }
         let imagesPerPage = imagesListService.imagesPerPage
         let indexPhotoNextPage = (lastLoadedPage-1)*imagesPerPage
-        
         var indexPaths: [IndexPath] = []
         for i in 0...(imagesPerPage - 1) {
             indexPaths.append(IndexPath(row: indexPhotoNextPage + i,section: 0))
@@ -161,20 +142,7 @@ extension ImagesListViewController: UITableViewDelegate {
         let widthImageView = tableView.contentSize.width-16-16
         let aspectRatio = imagesListService.photos[indexPath.row].size.height/imagesListService.photos[indexPath.row].size.width
         let heightCell = 4+aspectRatio*widthImageView+4
-       // print("HINT The height of the cell \(indexPath.row) is set")
         return heightCell
-       /* For mock pictures
-        let imageName = photosName[indexPath.row]
-        if let image = UIImage(named: imageName) {
-            let widthImageView = tableView.contentSize.width-16-16
-            let aspectRatio = image.size.height/image.size.width
-            let heightCell = 4+aspectRatio*widthImageView+4
-            print("HINT The height of the cell \(indexPath.row) is set")
-            return heightCell
-        } else {
-            print("Can not make the image for determining the heightForRow.")
-            return 34
-        }  */
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -187,20 +155,18 @@ extension ImagesListViewController: UITableViewDelegate {
             fetchPhotosNextPageNextDownload()
         }
     }
-    
 }
+
 extension ImagesListViewController: ImagesListCellDelegate {
     
     func imageListCellDidTapLike(_ cell: ImagesListCell) {
-        //print("HINT_ImagesListViewController didTapLikeButton")
         guard let index = tableView.indexPath(for: cell) else {
             print("Can not get the indexPath of the tapped like")
         return
         }
         let photoId = imagesListService.photos[index.row].id
         let photoLikedByUser = imagesListService.photos[index.row].likedByUser
-        //print("HINT_ImagesListViewController didTapLikeButton: \(index.row), \(photoId)")
-        //print("HINT_imageListCellDidTapLike LikeToBeSet:\(!photoLikedByUser)")
+        
         imagesListService.writeLike(indexPhoto: index.row, photoId: photoId, isLikeToBeSet: !photoLikedByUser) { [weak self] result in
             DispatchQueue.main.async {
                 guard let self = self else { return }

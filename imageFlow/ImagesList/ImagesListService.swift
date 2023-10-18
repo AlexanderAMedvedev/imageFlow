@@ -17,7 +17,7 @@ final class ImagesListService {
         case codeError
     }
     
-    //static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
+    static let didChangeNotification = Notification.Name(rawValue: "ImagesListServiceDidChange")
     
     private (set) var photos: [Photo] = []
     
@@ -29,11 +29,8 @@ final class ImagesListService {
     
     let imagesPerPage = 10
     
-    private lazy var dateFormatter: DateFormatter = {
-        let dateFormatterInput = DateFormatter()
-        dateFormatterInput.dateFormat = "yyyy-MM-dd'T'HH:mm:ss'Z'"
-        return dateFormatterInput
-    }()
+    private lazy var dateFormatter = ISO8601DateFormatter()
+    
     
     func fetchPhotosNextPage(completion: @escaping (Result<[Photo], Error>) -> Void) {
                 // Check, that the function is called within the main queue
@@ -75,7 +72,6 @@ final class ImagesListService {
             }
             
             guard let data = data else { return }
-            //print("HINT data_10Photos: \(data)")
             do {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -88,17 +84,18 @@ final class ImagesListService {
                     for i in 0..<self.imagesPerPage {
                         self.photos.append(nextPagePhotosForTable[i])
                     }
-                   //print("HINT_photos final: \(self.photos)")
-                    
-                   /* NotificationCenter.default.post(
-                        //post - Creates a notification(уведомление) with a given name, sender, and information and posts it to the notification center.
-                            name: ImagesListService.didChangeNotification,
-                            object: self,
-                            userInfo: ["Photos": self.photos])*/
+                    //print("HINT_photos final: \(self.photos)")
                     
                     self.lastLoadedPage = nextPage
                     self.task = nil
+                    
                     completion(.success(self.photos))
+            
+                    NotificationCenter.default.post(
+                            //post - Creates a notification(уведомление) with a given name, sender, and information and posts it to the notification center.
+                            name: ImagesListService.didChangeNotification,
+                            object: self,
+                            userInfo: ["Photos": self.photos])
                 }
             } catch {
                 print("Failed to parse the downloaded file")
@@ -131,7 +128,6 @@ extension ImagesListService {
             return nil
         }
         // convert String -> Date
-/// clarify the -3hours change of time after String->Date conversion
         guard let date = dateFormatter.date(from: stringInput) else {
             print("There was an error decoding the input string date")
             return nil
@@ -139,7 +135,6 @@ extension ImagesListService {
         return date
         //.date - Returns a date representation of a specified string that the system interprets using the receiver’s(приемник) current settings.
     }
-    
 }
 
 extension ImagesListService {
@@ -175,7 +170,6 @@ extension ImagesListService {
                 //print("HINT_changeLike response: \(response)")
             
             guard let data = data else { return }
-           // print(data)
             do {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
@@ -203,5 +197,4 @@ extension ImagesListService {
         }
             taskSetLike!.resume()
     }
-    }
-/// finish the code
+}

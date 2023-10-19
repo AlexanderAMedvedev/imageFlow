@@ -8,9 +8,12 @@
 import Foundation
 import UIKit
 import Kingfisher
+import WebKit
 
 final class ProfileViewController: UIViewController {
     
+    private let oauth2TokenStorage = OAuth2TokenStorage()
+
     static var exitImage = UIImage(named: "ipad.and.arrow.forward")!
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -50,10 +53,10 @@ final class ProfileViewController: UIViewController {
     @discardableResult private func addPersonalPhotoView(_ url: URL) -> UIImageView {
         let personalPhotoView = UIImageView(image: UIImage())
         personalPhotoView.kf.indicatorType = .activity
-        personalPhotoView.kf.setImage(with: url)
-        
+        //personalPhotoView.kf.setImage(with: url)
+        //personalPhotoView.layer.cornerRadius = 20
         let processor = RoundCornerImageProcessor(cornerRadius: 20)
-        personalPhotoView.kf.setImage(with: url, options: [.processor(processor)])
+        personalPhotoView.kf.setImage(with: url, options: [.processor(processor), .cacheSerializer(FormatIndicatedCacheSerializer.png)]) //in order to save image with alpha-channel
         
         personalPhotoView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(personalPhotoView)
@@ -84,7 +87,38 @@ final class ProfileViewController: UIViewController {
         return exitButton
     }
     
-    @objc private func didTapExitButton() {}
+    @objc private func didTapExitButton() {
+        
+            var alert = UIAlertController(title: "Пока, пока", message: "Точно хотите выйти?", preferredStyle: .alert)
+            
+            let actionNo = UIAlertAction(title: "Нет", style: .default)
+            alert.addAction(actionNo)
+            
+            let actionYes = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
+                guard let self = self else { return }
+                self.oauth2TokenStorage.token = nil
+                self.clean()
+                guard let window = UIApplication.shared.windows.first else { fatalError("Invalid Configuration") }
+                let viewController = SplashViewController()
+                window.rootViewController = viewController
+            }
+            alert.addAction(actionYes)
+            present(alert, animated: true)
+    }
+    
+    
+    private func clean() {
+        // Очищаем все куки из хранилища.
+        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+        // Запрашиваем все данные из локального хранилища.
+        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+            // Массив полученных записей удаляем из хранилища.
+            records.forEach { record in
+                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+            }
+        }
+       // print("HINT_pVC: browser is cleaned")
+    }
     
     @discardableResult private func addNameFamilyNameLabel(_ fullName: String) -> UILabel {
         let nameFamilyNameLabel = UILabel()

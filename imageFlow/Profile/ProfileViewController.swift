@@ -10,9 +10,14 @@ import UIKit
 import Kingfisher
 import WebKit
 
-final class ProfileViewController: UIViewController {
-    
-    private let oauth2TokenStorage = OAuth2TokenStorage()
+public protocol ProfileViewControllerProtocol: AnyObject {
+    var presenter: ProfileViewPresenterProtocol? { get set }
+    func addPersonalPhotoView(_ url: URL)
+    func presentAlert(_ alert: UIAlertController)
+}
+
+final class ProfileViewController: UIViewController, ProfileViewControllerProtocol {
+    var presenter: ProfileViewPresenterProtocol?
 
     static var exitImage = UIImage(named: "ipad.and.arrow.forward")!
     
@@ -25,11 +30,10 @@ final class ProfileViewController: UIViewController {
         super.viewDidLoad()
          
         let profileService = ProfileService.shared
-
         addExitButton()
-        addNameFamilyNameLabel(profileService.profile!.name)
-        addTaggedUserName(profileService.profile!.loginName)
-        addUserMessage(profileService.profile!.bio)
+        addNameFamilyNameLabel(profileService.profile?.name ?? "Was not downloaded")
+        addTaggedUserName(profileService.profile?.loginName ?? "Was not downloaded")
+        addUserMessage(profileService.profile?.bio ?? "Was not downloaded")
             
         profileImageServiceObserver = NotificationCenter.default.addObserver(
                 forName: ProfileImageService.didChangeNotification, // 3
@@ -37,20 +41,12 @@ final class ProfileViewController: UIViewController {
                 queue: .main                                        // 5
             ) { [weak self] _ in
                 guard let self = self else { return }
-                self.updateAvatar()                                 // 6
+                self.presenter?.updateAvatar()                                 // 6
             }
-        updateAvatar()
+        presenter?.updateAvatar()
     }
         
-    private func updateAvatar() {                                   // 8
-            guard
-                let profileImageURL = ProfileImageService.shared.profileSmallImageURL,
-                let url = URL(string: profileImageURL)
-            else { return }
-            // TODO [Sprint 11] Обновить аватар, используя Kingfisher
-        addPersonalPhotoView(url)
-        }
-    @discardableResult private func addPersonalPhotoView(_ url: URL) -> UIImageView {
+     func addPersonalPhotoView(_ url: URL) {
         let personalPhotoView = UIImageView(image: UIImage())
         personalPhotoView.kf.indicatorType = .activity
         //personalPhotoView.kf.setImage(with: url)
@@ -66,10 +62,10 @@ final class ProfileViewController: UIViewController {
             personalPhotoView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
             personalPhotoView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16)
         ])
-        return personalPhotoView
+        return
     }
     
-    @discardableResult private func addExitButton() -> UIButton {
+     private func addExitButton()  {
         let exitButton = UIButton.systemButton(
             with: ProfileViewController.exitImage,
             target: self,
@@ -84,43 +80,18 @@ final class ProfileViewController: UIViewController {
             exitButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 45),
             exitButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16)
         ])
-        return exitButton
+        return
     }
     
     @objc private func didTapExitButton() {
-        
-            var alert = UIAlertController(title: "Пока, пока", message: "Точно хотите выйти?", preferredStyle: .alert)
-            
-            let actionNo = UIAlertAction(title: "Нет", style: .default)
-            alert.addAction(actionNo)
-            
-            let actionYes = UIAlertAction(title: "Да", style: .default) { [weak self] _ in
-                guard let self = self else { return }
-                self.oauth2TokenStorage.token = nil
-                self.clean()
-                guard let window = UIApplication.shared.windows.first else { fatalError("Invalid Configuration") }
-                let viewController = SplashViewController()
-                window.rootViewController = viewController
-            }
-            alert.addAction(actionYes)
+        presenter?.makeAlert()
+    }
+    
+    func presentAlert(_ alert: UIAlertController) {
             present(alert, animated: true)
     }
     
-    
-    private func clean() {
-        // Очищаем все куки из хранилища.
-        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
-        // Запрашиваем все данные из локального хранилища.
-        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
-            // Массив полученных записей удаляем из хранилища.
-            records.forEach { record in
-                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
-            }
-        }
-       // print("HINT_pVC: browser is cleaned")
-    }
-    
-    @discardableResult private func addNameFamilyNameLabel(_ fullName: String) -> UILabel {
+     private func addNameFamilyNameLabel(_ fullName: String)  {
         let nameFamilyNameLabel = UILabel()
         nameFamilyNameLabel.text = fullName //"Екатерина Новикова"
         nameFamilyNameLabel.font = UIFont.boldSystemFont(ofSize: 23)
@@ -131,10 +102,10 @@ final class ProfileViewController: UIViewController {
             nameFamilyNameLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 102),
             nameFamilyNameLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16)
         ])
-        return nameFamilyNameLabel
+        return
     }
     
-    @discardableResult private func addTaggedUserName(_ taggedUserNameString: String) -> UILabel {
+     private func addTaggedUserName(_ taggedUserNameString: String)  {
         let taggedUserName = UILabel()
         taggedUserName.text = taggedUserNameString // "@ekaterina_nov"
         taggedUserName.font = UIFont.systemFont(ofSize: 13)
@@ -145,10 +116,10 @@ final class ProfileViewController: UIViewController {
             taggedUserName.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 136),
             taggedUserName.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16)            
         ])
-        return taggedUserName
+        return
     }
     
-    @discardableResult private func addUserMessage(_ userBio: String) -> UILabel {
+     private func addUserMessage(_ userBio: String)  {
         let userMessage = UILabel()
         userMessage.textColor = .ypWhite
         userMessage.font = UIFont.systemFont(ofSize: 13)
@@ -160,6 +131,6 @@ final class ProfileViewController: UIViewController {
             userMessage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 162),
             userMessage.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16)
         ])
-        return userMessage
+        return
     }
 }

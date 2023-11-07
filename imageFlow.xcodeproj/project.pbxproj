@@ -43,6 +43,7 @@
 		1F7DF9822AF8F1CE00C96479 /* ProfileViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7DF9812AF8F1CE00C96479 /* ProfileViewTests.swift */; };
 		1F7DF9842AF8F35D00C96479 /* ProfileViewPresenterSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7DF9832AF8F35D00C96479 /* ProfileViewPresenterSpy.swift */; };
 		1F7DF9882AF92B7A00C96479 /* ProfileViewControllerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7DF9872AF92B7A00C96479 /* ProfileViewControllerSpy.swift */; };
+		1F7DF98A2AFA2B7200C96479 /* ImagesListPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7DF9892AFA2B7200C96479 /* ImagesListPresenter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,6 +94,7 @@
 		1F7DF9812AF8F1CE00C96479 /* ProfileViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewTests.swift; sourceTree = "<group>"; };
 		1F7DF9832AF8F35D00C96479 /* ProfileViewPresenterSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewPresenterSpy.swift; sourceTree = "<group>"; };
 		1F7DF9872AF92B7A00C96479 /* ProfileViewControllerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewControllerSpy.swift; sourceTree = "<group>"; };
+		1F7DF9892AFA2B7200C96479 /* ImagesListPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListPresenter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,6 +183,7 @@
 			isa = PBXGroup;
 			children = (
 				1100B8EC2A27203C009FE88C /* ImagesListViewController.swift */,
+				1F7DF9892AFA2B7200C96479 /* ImagesListPresenter.swift */,
 				11630E912A2F59610067AEBE /* ImagesListCellClass.swift */,
 				11C5D8352ACEB08400E4DE59 /* ImagesListService.swift */,
 				11C5D8372ACEB0C500E4DE59 /* ImagesListStructures.swift */,
@@ -365,6 +368,7 @@
 				11C7A6F52A83915D0032FB7F /* AuthConfiguration.swift in Sources */,
 				111343C22AB8441600756F45 /* UIBlockingProgressHUD.swift in Sources */,
 				111343C52AB849E300756F45 /* ProfileService.swift in Sources */,
+				1F7DF98A2AFA2B7200C96479 /* ImagesListPresenter.swift in Sources */,
 				11C5D8382ACEB0C500E4DE59 /* ImagesListStructures.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

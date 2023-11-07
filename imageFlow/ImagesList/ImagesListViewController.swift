@@ -7,10 +7,15 @@
 
 import UIKit
 import Kingfisher
-
-final class ImagesListViewController: UIViewController {
+public protocol ImagesListViewControllerProtocol: AnyObject {
+    var presenter: ImagesListPresenterProtocol? { get  set }
+    func presentAlert(_ alert: UIAlertController)
+    func configCell(for cell: ImagesListCell, with indexPath: IndexPath, moment: String)
+}
+final class ImagesListViewController: UIViewController, ImagesListViewControllerProtocol {
 //Q: 1) `tableView.register(ImagesListCell.self,...`
-    
+    var presenter: ImagesListPresenterProtocol?
+
     @IBOutlet private var tableView: UITableView!
     private let imagesListService = ImagesListService.shared
 
@@ -78,36 +83,13 @@ extension ImagesListViewController {
             }
         }
     
-    private func fetchPhotosNextPageNextDownload() {
-        imagesListService.fetchPhotosNextPage(){ [weak self] result in
-            DispatchQueue.main.async  {
-                guard let self = self else { return }
-                switch result {
-                case .success: 
-                    break
-                case .failure:
-                        var alert = UIAlertController(title: "Что-то пошло не так(", message: "Не удалось загрузить фото в json-файле", preferredStyle: .alert)
-                        let action = UIAlertAction(title: "Ок", style: .default)
-                        alert.addAction(action)
-                        self.present(alert, animated: true)
-                }
-            }
-        }
+    func presentAlert(_ alert: UIAlertController) {
+        present(alert, animated: true)
     }
     
     private func updateTableViewAnimated() {
-        guard let lastLoadedPage = imagesListService.lastLoadedPage else {
-            print("lastLoadedPage is nil!")
-            return }
-        let imagesPerPage = imagesListService.imagesPerPage
-        let indexPhotoNextPage = (lastLoadedPage-1)*imagesPerPage
-        var indexPaths: [IndexPath] = []
-        for i in 0...(imagesPerPage - 1) {
-            indexPaths.append(IndexPath(row: indexPhotoNextPage + i,section: 0))
-        }
-        
         tableView.performBatchUpdates {
-            self.tableView.insertRows(at: indexPaths,with: .automatic)
+            self.tableView.insertRows(at: presenter!.prepareIndexPaths(),with: .automatic)
         } completion: { _ in
             //print("HINT the table is longer")
         }
@@ -140,8 +122,7 @@ extension ImagesListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         let widthImageView = tableView.contentSize.width-16-16
-        let aspectRatio = imagesListService.photos[indexPath.row].size.height/imagesListService.photos[indexPath.row].size.width
-        let heightCell = 4+aspectRatio*widthImageView+4
+        let heightCell = 4+presenter!.aspectRatio(for: indexPath)*widthImageView+4
         return heightCell
     }
     
@@ -150,10 +131,7 @@ extension ImagesListViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row + 1 == imagesListService.photos.count {
-            //print("HINT Time to download the next page of photos.")
-            fetchPhotosNextPageNextDownload()
-        }
+        presenter?.downloadNextPage(if: indexPath)
     }
 }
 
@@ -164,25 +142,7 @@ extension ImagesListViewController: ImagesListCellDelegate {
             print("Can not get the indexPath of the tapped like")
         return
         }
-        let photoId = imagesListService.photos[index.row].id
-        let photoLikedByUser = imagesListService.photos[index.row].likedByUser
-        
-        imagesListService.writeLike(indexPhoto: index.row, photoId: photoId, isLikeToBeSet: !photoLikedByUser) { [weak self] result in
-            DispatchQueue.main.async {
-                guard let self = self else { return }
-                switch result {
-                case .success:
-                    self.configCell(for: cell, with: index, moment: "changeLike")
-                    UIBlockingProgressHUD.dismiss()
-                case .failure:
-                    UIBlockingProgressHUD.dismiss()
-                    var alert = UIAlertController(title: "Что-то пошло не так(", message: "Не удалось изменить состояние лайка на сервере", preferredStyle: .alert)
-                    let action = UIAlertAction(title: "Ок", style: .default)
-                    alert.addAction(action)
-                    self.present(alert, animated: true)
-                }
-            }
-        }
+        presenter?.writeLike(for: cell, under: index)
     }
     
 }

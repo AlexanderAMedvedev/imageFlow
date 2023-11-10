@@ -9,18 +9,20 @@ import Foundation
 import UIKit
 public protocol ImagesListPresenterProtocol {
     var view: ImagesListViewControllerProtocol? { get set }
-    func fetchPhotosNextPageNextDownload()
-    func downloadNextPage(if indexPath: IndexPath)
+    //func fetchPhotosNextPageNextDownload()
+    func countRowsInTable() -> Int
+    func downloadNextPage(if indexPathRow: Int)
     func prepareIndexPaths() -> [IndexPath]
     func aspectRatio(for indexPath: IndexPath) -> Double
     func writeLike(for cell: ImagesListCell, under index: IndexPath)
+    func configCell(for cell: ImagesListCell, with indexPath: IndexPath, moment: String)
 }
 
 final class ImagesListPresenter: ImagesListPresenterProtocol {
     private let imagesListService = ImagesListService.shared
     weak var view: ImagesListViewControllerProtocol?
     
-    func fetchPhotosNextPageNextDownload() {
+    private func fetchPhotosNextPageNextDownload() {
         imagesListService.fetchPhotosNextPage(){ [weak self] result in
             DispatchQueue.main.async  {
                 guard let self = self else { return }
@@ -37,8 +39,8 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
         }
     }
     
-    func downloadNextPage(if indexPath: IndexPath) {
-        if  indexPath.row + 1 == imagesListService.photos.count {
+    func downloadNextPage(if indexPathRow: Int) {
+        if  indexPathRow + 1 == imagesListService.photos.count {
             //print("HINT Time to download the next page of photos.")
             fetchPhotosNextPageNextDownload()
         }
@@ -70,7 +72,7 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
                 guard let self = self else { return }
                 switch result {
                 case .success:
-                    self.view?.configCell(for: cell, with: index, moment: "changeLike")
+                    self.configCell(for: cell, with: index, moment: "changeLike")
                     UIBlockingProgressHUD.dismiss()
                 case .failure:
                     UIBlockingProgressHUD.dismiss()
@@ -83,4 +85,28 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
         }
     }
     
+    func configCell(for cell: ImagesListCell, with indexPath: IndexPath, moment: String) {
+
+        let photoData = imagesListService.photos[indexPath.row]
+        if photoData.likedByUser == false {
+            view?.setImageForLike("noLike", for: cell)
+        } else if photoData.likedByUser == true {
+            view?.setImageForLike("Like", for: cell)
+        }
+        
+        if moment == "initialConfig" {
+            let url = URL(string: imagesListService.photos[indexPath.row].thumbImageURL)
+            let placeHolder = UIImage(named: "scribble_variable")
+            cell.imageCell.kf.indicatorType = .activity
+            cell.imageCell.kf.setImage(with: url, placeholder: placeHolder)
+            
+            guard let createdAt = imagesListService.photos[indexPath.row].createdAt else { return }
+            view?.setDateForPhoto(createdAt, for: cell)
+            view?.setDelegateForCell(cell)
+        }
+    }
+    
+    func countRowsInTable() -> Int {
+        imagesListService.photos.count
+    }
 }

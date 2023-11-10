@@ -16,7 +16,8 @@ final class TabBarController: UITabBarController {
         let storyboard = UIStoryboard(name: "Main", bundle: .main)
         var imagesListViewController = storyboard.instantiateViewController(
             withIdentifier: "ImagesListViewController"
-        ) as! ImagesListViewController
+        ) as? ImagesListViewController
+        guard var imagesListViewController else { fatalError("Can not unwrap imagesListViewController")}
         var imagesListPresenter = ImagesListPresenter()
         imagesListViewController.presenter = imagesListPresenter
         imagesListPresenter.view = imagesListViewController

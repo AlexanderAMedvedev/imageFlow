@@ -10,7 +10,9 @@ import Kingfisher
 public protocol ImagesListViewControllerProtocol: AnyObject {
     var presenter: ImagesListPresenterProtocol? { get  set }
     func presentAlert(_ alert: UIAlertController)
-    func configCell(for cell: ImagesListCell, with indexPath: IndexPath, moment: String)
+    func setImageForLike(_ named: String, for cell: ImagesListCell)
+    func setDateForPhoto(_ createdAt: Date, for cell: ImagesListCell)
+    func setDelegateForCell(_ cell: ImagesListCell)
 }
 final class ImagesListViewController: UIViewController, ImagesListViewControllerProtocol {
 //Q: 1) `tableView.register(ImagesListCell.self,...`
@@ -37,6 +39,7 @@ final class ImagesListViewController: UIViewController, ImagesListViewController
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
         // var contentInset: UIEdgeInsets { get set }
         // The custom distance that the content view is inset(вставка) from the safe area or scroll view edges.
+        tableView.accessibilityIdentifier = "TableWithImages"
         NotificationCenter.default.addObserver(
              forName: ImagesListService.didChangeNotification,
                  object: nil,
@@ -47,27 +50,7 @@ final class ImagesListViewController: UIViewController, ImagesListViewController
              }
     }
 
-    func configCell(for cell: ImagesListCell, with indexPath: IndexPath, moment: String) {
-
-        let photoData = imagesListService.photos[indexPath.row]
-        if photoData.likedByUser == false {
-            cell.likeButton.imageView?.image = UIImage(named: "noLike")
-        } else if photoData.likedByUser == true {
-            cell.likeButton.imageView?.image = UIImage(named: "Like")
-        }
-        
-        if moment == "initialConfig" {
-            let url = URL(string: imagesListService.photos[indexPath.row].thumbImageURL)
-            let placeHolder = UIImage(named: "scribble_variable")
-            cell.imageCell.kf.indicatorType = .activity
-            cell.imageCell.kf.setImage(with: url, placeholder: placeHolder)
-            
-            guard let createdAt = imagesListService.photos[indexPath.row].createdAt else { return }
-            cell.dateCell.text = dateFormatter.string(from: createdAt) 
-            
-            cell.delegate = self
-        }
-    }
+  
 }
 
 extension ImagesListViewController {
@@ -94,13 +77,25 @@ extension ImagesListViewController {
             //print("HINT the table is longer")
         }
     }
+    
+    func setImageForLike(_ named: String, for cell: ImagesListCell) {
+        cell.likeButton.imageView?.image = UIImage(named: named)
+    }
+    
+    func setDateForPhoto(_ createdAt: Date, for cell: ImagesListCell) {
+        cell.dateCell.text = dateFormatter.string(from: createdAt)
+    }
+    
+    func setDelegateForCell(_ cell: ImagesListCell) {
+        cell.delegate = self
+    }
 }
 
 extension ImagesListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //print("HINT numberOfRowsInSection = \(imagesListService.photos.count)")
-        return imagesListService.photos.count //photosName.count
+        guard let numberOfRowsInSection = presenter?.countRowsInTable() else { fatalError("Did not determine the number of rows in table.") }
+            return numberOfRowsInSection
     }
         
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -112,7 +107,7 @@ extension ImagesListViewController: UITableViewDataSource {
             return UITableViewCell()
         }
                 
-        configCell(for: imageListCell, with: indexPath, moment: "initialConfig")
+        presenter?.configCell(for: imageListCell, with: indexPath, moment: "initialConfig")
         return imageListCell
     }
 }
@@ -131,7 +126,7 @@ extension ImagesListViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        presenter?.downloadNextPage(if: indexPath)
+        presenter?.downloadNextPage(if: indexPath.row)
     }
 }
 

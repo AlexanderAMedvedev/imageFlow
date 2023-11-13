@@ -28,12 +28,12 @@ final class imageFlowUITests: XCTestCase {
         let passwordTextField = webView.descendants(matching: .secureTextField).element
         XCTAssertTrue(passwordTextField.waitForExistence(timeout: 5))
         passwordTextField.tap()
-        passwordTextField.typeText("264uslahwok")
+        passwordTextField.typeText("YOUR_PASSWORD")
         
         let loginTextField = webView.descendants(matching: .textField).element
         XCTAssertTrue(loginTextField.waitForExistence(timeout: 5))
         loginTextField.tap()
-        loginTextField.typeText("alexander.medvedev.305@yandex.ru")
+        loginTextField.typeText("YOUR_E-MAIL")
         
         app.toolbars["Toolbar"].buttons["Done"].tap()
         webView.buttons["Login"].tap()
@@ -81,8 +81,8 @@ final class imageFlowUITests: XCTestCase {
         app.tabBars.buttons.element(boundBy: 1).tap()
         sleep(2)
             // Проверить, что на нём отображаются ваши персональные данные
-        XCTAssertTrue(app.staticTexts["Alexander Medvedev"].exists)
-        XCTAssertTrue(app.staticTexts["@alexmed"].exists)
+        XCTAssertTrue(app.staticTexts["YOUR_NAME__YOUR_FAMILY_NAME"].exists)
+        XCTAssertTrue(app.staticTexts["@YOUR_USER_NAME"].exists)
             // Нажать кнопку логаута
         app.buttons["ipad.and.arrow"].tap()
         app.alerts["Пока, пока"].scrollViews.otherElements.buttons["Да"].tap()

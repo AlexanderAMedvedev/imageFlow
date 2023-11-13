@@ -9,15 +9,18 @@ import Foundation
 import imageFlow
 
 final class ProfileViewPresenterSpy: ProfileViewPresenterProtocol {
-    func makeAlert() {
-    }
-    
+
     weak var view: imageFlow.ProfileViewControllerProtocol?
     
     var didCallUpdateAvatar = false
+    var didCallMakeAlert = false
     
     func updateAvatar() {
         didCallUpdateAvatar = true
+    }
+    
+    func makeAlert() {
+        didCallMakeAlert = true
     }
     
     func clean() {

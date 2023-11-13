@@ -50,8 +50,6 @@ final class SingleImageViewController: UIViewController {
             }
         }
         //imageView.image = image //for mock-data
-        
-        
     }
     
     private func showAlert() {

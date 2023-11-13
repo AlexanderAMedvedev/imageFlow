@@ -83,7 +83,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         return
     }
     
-    @objc private func didTapExitButton() {
+    @objc func didTapExitButton() {
         presenter?.makeAlert()
     }
     

@@ -17,6 +17,15 @@ final class ProfileViewTests: XCTestCase {
         XCTAssertTrue(presenter.didCallUpdateAvatar)
     }
     
+    func testProfileViewControllerDidCallMakeAlert() {
+        var viewController = ProfileViewController()
+        var presenter = ProfileViewPresenterSpy()
+        viewController.presenter = presenter
+        presenter.view = viewController
+        viewController.didTapExitButton()
+        XCTAssertTrue(presenter.didCallMakeAlert)
+    }
+    
     func testProfileViewPresenterDidCallPresentAlert() {
         var viewController = ProfileViewControllerSpy()
         var presenter = ProfileViewPresenter()

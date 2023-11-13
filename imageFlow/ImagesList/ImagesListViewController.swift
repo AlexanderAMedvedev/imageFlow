@@ -18,8 +18,7 @@ final class ImagesListViewController: UIViewController, ImagesListViewController
 //Q: 1) `tableView.register(ImagesListCell.self,...`
     var presenter: ImagesListPresenterProtocol?
 
-    @IBOutlet private var tableView: UITableView!
-    private let imagesListService = ImagesListService.shared
+    @IBOutlet var tableView: UITableView!
 
     private let ShowSingleImageSegueIdentifier = "ShowSingleImage"
     
@@ -59,7 +58,7 @@ extension ImagesListViewController {
             if segue.identifier == ShowSingleImageSegueIdentifier {
                 let viewController = segue.destination as! SingleImageViewController
                 let indexPath = sender as! IndexPath
-                let urlFullPhoto = imagesListService.photos[indexPath.row].largeImageURL
+                let urlFullPhoto = presenter?.largeImageURL(indexPath: indexPath)
                 viewController.imageUrl = urlFullPhoto
             } else {
                 super.prepare(for: segue, sender: sender)
@@ -118,6 +117,9 @@ extension ImagesListViewController: UITableViewDelegate {
         
         let widthImageView = tableView.contentSize.width-16-16
         let heightCell = 4+presenter!.aspectRatio(for: indexPath)*widthImageView+4
+        if heightCell < 0.0 {
+            return 1.0
+        }
         return heightCell
     }
     

@@ -9,10 +9,14 @@ import Foundation
 import imageFlow
 
 final class ImagesListPresenterSpy: ImagesListPresenterProtocol {
+    
     weak var view: imageFlow.ImagesListViewControllerProtocol?
-    var DidCallCountRowsInTable = false
+    var didCallCountRowsInTable = false
+    var didCallAspectRatio = false
+    var didCallConfigCell = false
+    
     func countRowsInTable() -> Int {
-        DidCallCountRowsInTable = true
+        didCallCountRowsInTable = true
         return 1
     }
     
@@ -25,7 +29,8 @@ final class ImagesListPresenterSpy: ImagesListPresenterProtocol {
     }
     
     func aspectRatio(for indexPath: IndexPath) -> Double {
-        1.0
+        didCallAspectRatio = true
+        return 1.0
     }
     
     func writeLike(for cell: imageFlow.ImagesListCell, under index: IndexPath) {
@@ -33,8 +38,10 @@ final class ImagesListPresenterSpy: ImagesListPresenterProtocol {
     }
     
     func configCell(for cell: imageFlow.ImagesListCell, with indexPath: IndexPath, moment: String) {
-        
+        didCallConfigCell = true
     }
     
-    
+    func largeImageURL(indexPath: IndexPath) -> String {
+        ""
+    }
 }

@@ -16,10 +16,13 @@ public protocol ImagesListPresenterProtocol {
     func aspectRatio(for indexPath: IndexPath) -> Double
     func writeLike(for cell: ImagesListCell, under index: IndexPath)
     func configCell(for cell: ImagesListCell, with indexPath: IndexPath, moment: String)
+    func largeImageURL(indexPath: IndexPath) -> String
 }
 
 final class ImagesListPresenter: ImagesListPresenterProtocol {
+    
     private let imagesListService = ImagesListService.shared
+    
     weak var view: ImagesListViewControllerProtocol?
     
     private func fetchPhotosNextPageNextDownload() {
@@ -108,5 +111,9 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
     
     func countRowsInTable() -> Int {
         imagesListService.photos.count
+    }
+    
+    func largeImageURL(indexPath: IndexPath) -> String {
+        imagesListService.photos[indexPath.row].largeImageURL
     }
 }

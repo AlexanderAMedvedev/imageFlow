@@ -36,7 +36,7 @@ final class ImagesListService {
                 // Check, that the function is called within the main queue
         assert(Thread.isMainThread)
                 // If the task is active the next task is not started, function returns back
-        if let task = task {
+        if task != nil {
             print("The page of photos is already downloading")
             return
         }

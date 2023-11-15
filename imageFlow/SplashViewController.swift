@@ -107,7 +107,7 @@ extension SplashViewController: AuthViewControllerDelegate {
                         //self.switchToTabBarController()
                     case .failure:
                         UIBlockingProgressHUD.dismiss()
-                        var alert = UIAlertController(title: "Что-то пошло не так(", message: "Не удалось войти в систему", preferredStyle: .alert)
+                        let alert = UIAlertController(title: "Что-то пошло не так(", message: "Не удалось войти в систему", preferredStyle: .alert)
                         let action = UIAlertAction(title: "Ок", style: .default)
                         alert.addAction(action)
                         self.present(alert, animated: true)
@@ -128,7 +128,7 @@ extension SplashViewController: AuthViewControllerDelegate {
                     case .failure:
                         UIBlockingProgressHUD.dismiss()
                     
-                        var alert = UIAlertController(title: "Что-то пошло не так(", message: "Не удалось загрузить фото в json-файле", preferredStyle: .alert)
+                        let alert = UIAlertController(title: "Что-то пошло не так(", message: "Не удалось загрузить фото в json-файле", preferredStyle: .alert)
                         let action = UIAlertAction(title: "Ок", style: .default)
                         alert.addAction(action)
                         self.present(alert, animated: true)

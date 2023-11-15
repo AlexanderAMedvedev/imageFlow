@@ -49,13 +49,15 @@ final class ProfileViewPresenter: ProfileViewPresenterProtocol {
     }
     
     func createNextWindow() {
-        guard let window = UIApplication.shared.windows.first else { fatalError("Invalid Configuration") }
+        guard let window = UIApplication.shared.windows.first else { assertionFailure("Invalid Configuration")
+            return
+        }
         let viewController = SplashViewController()
         window.rootViewController = viewController
     }
     
     func makeAlert() {
-        var alert = UIAlertController(title: "Пока, пока", message: "Точно хотите выйти?", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Пока, пока", message: "Точно хотите выйти?", preferredStyle: .alert)
         
         let actionNo = UIAlertAction(title: "Нет", style: .default)
         alert.addAction(actionNo)

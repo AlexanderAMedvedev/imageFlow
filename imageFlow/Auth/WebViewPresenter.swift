@@ -27,7 +27,10 @@ final class WebViewPresenter: WebViewPresenterProtocol {
     func viewDidLoad() {
         didUpdateProgressValue(0)
         //Загрузка окна для ввода логина и пароля для unSplash
-        let request = authHelper.authRequest()
+        guard let request = authHelper.authRequest() else {
+            assertionFailure("Did not get request")
+            return
+        }
         view?.load(request: request)
     }
     

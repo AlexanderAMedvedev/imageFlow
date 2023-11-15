@@ -53,7 +53,7 @@ final class SingleImageViewController: UIViewController {
     }
     
     private func showAlert() {
-        var alert = UIAlertController(title: "Что-то пошло не так(", message: "Попробовать ещё раз?", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Что-то пошло не так(", message: "Попробовать ещё раз?", preferredStyle: .alert)
         
         let actionNo = UIAlertAction(title: "Не надо", style: .default)
         alert.addAction(actionNo)

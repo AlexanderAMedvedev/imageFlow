@@ -33,7 +33,7 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
                 case .success:
                     break
                 case .failure:
-                    var alert = UIAlertController(title: "Что-то пошло не так(", message: "Не удалось загрузить фото в json-файле", preferredStyle: .alert)
+                    let alert = UIAlertController(title: "Что-то пошло не так(", message: "Не удалось загрузить фото в json-файле", preferredStyle: .alert)
                     let action = UIAlertAction(title: "Ок", style: .default)
                     alert.addAction(action)
                     self.view?.presentAlert(alert)
@@ -79,7 +79,7 @@ final class ImagesListPresenter: ImagesListPresenterProtocol {
                     UIBlockingProgressHUD.dismiss()
                 case .failure:
                     UIBlockingProgressHUD.dismiss()
-                    var alert = UIAlertController(title: "Что-то пошло не так(", message: "Не удалось изменить состояние лайка на сервере", preferredStyle: .alert)
+                    let alert = UIAlertController(title: "Что-то пошло не так(", message: "Не удалось изменить состояние лайка на сервере", preferredStyle: .alert)
                     let action = UIAlertAction(title: "Ок", style: .default)
                     alert.addAction(action)
                     self.view?.presentAlert(alert)

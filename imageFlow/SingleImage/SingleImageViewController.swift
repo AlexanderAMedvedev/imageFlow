@@ -50,12 +50,10 @@ final class SingleImageViewController: UIViewController {
             }
         }
         //imageView.image = image //for mock-data
-        
-        
     }
     
     private func showAlert() {
-        var alert = UIAlertController(title: "Что-то пошло не так(", message: "Попробовать ещё раз?", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Что-то пошло не так(", message: "Попробовать ещё раз?", preferredStyle: .alert)
         
         let actionNo = UIAlertAction(title: "Не надо", style: .default)
         alert.addAction(actionNo)

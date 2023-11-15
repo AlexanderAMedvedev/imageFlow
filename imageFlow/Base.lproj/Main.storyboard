@@ -28,6 +28,7 @@
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5EV-ch-bKd">
                                 <rect key="frame" x="24" y="700" width="345" height="48"/>
                                 <color key="backgroundColor" name="YP White"/>
+                                <accessibility key="accessibilityConfiguration" identifier="Authenticate"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="48" id="5di-wn-lYo"/>
                                 </constraints>
@@ -66,7 +67,7 @@
         <!--Web View View Controller-->
         <scene sceneID="J6e-GQ-Eo9">
             <objects>
-                <viewController id="uCg-jj-sLL" customClass="WebViewViewController" customModule="imageFlow" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="WebViewViewController" id="uCg-jj-sLL" customClass="WebViewViewController" customModule="imageFlow" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ymQ-d6-gRS">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -172,6 +173,7 @@
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cuq-mB-1cD">
                                                     <rect key="frame" x="333" y="4" width="44" height="44"/>
+                                                    <accessibility key="accessibilityConfiguration" identifier="LikeSymbol"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="44" id="0uz-79-tjx"/>
                                                         <constraint firstAttribute="width" secondItem="cuq-mB-1cD" secondAttribute="height" multiplier="1:1" id="ycQ-Md-cnG"/>
@@ -267,6 +269,7 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="oSG-Je-SYP" userLabel="Back">
                                 <rect key="frame" x="0.0" y="63" width="65" height="44"/>
+                                <accessibility key="accessibilityConfiguration" identifier="BackFromSingleImage"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="bJz-bZ-mpg"/>
                                     <constraint firstAttribute="width" constant="65" id="tYQ-iw-YAC"/>
@@ -338,7 +341,7 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="tintColor">
-            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
